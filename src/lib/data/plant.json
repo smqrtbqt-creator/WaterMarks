@@ -1,0 +1,424 @@
+{
+  "plant": {
+    "name": "Rivière Blanche",
+    "river": "Rivière Blanche",
+    "designFlowM3h": 200,
+    "settlerDesignFlowM3h": 200,
+    "filterDesignFlowM3h": 200,
+    "filterHardMaxM3h": 300,
+    "contactVolumeM3": 90,
+    "reservoirCapacityM3": 800,
+    "temperatureNote": "La température est fixée par le scénario.",
+    "tdsMgL": 200,
+    "targetCt": 5,
+    "backwashHours": 0.4,
+    "backwashVolumeM3": 36,
+    "purgeHours": 0.45
+  },
+  "hypotheses": [
+    "Chaque procédé est décrit par une fonction illustrative, pas par une loi de dimensionnement.",
+    "La qualité affichée est le régime stabilisé des réglages en cours. Les boues, la perte de charge et le réservoir, eux, évoluent avec le temps simulé.",
+    "La courbe de coagulation dépend du coagulant, de la dose, du pH et, plus faiblement, du polymère. Une dose trop basse ou trop haute dégrade le résultat.",
+    "La décantation ne fait bien son travail que si les flocs sont formés et si le débit reste proche du régime prévu (200 m³/h).",
+    "Le filtre s’encrasse plus vite quand l’eau décantée est encore turbide. Au-delà d’une perte de charge élevée, il laisse passer la turbidité et sa capacité chute.",
+    "La reminéralisation ajoute calcium et alcalinité avec la chaux. Le CO₂ sert à ramener le pH. L’indice de Langelier est une approximation à TDS fixe (200 mg/L).",
+    "La désinfection calcule un résiduel après une demande liée à la turbidité, puis un CT qui diminue si le pH monte ou si le débit raccourcit le temps de contact.",
+    "La cible de CT (5 mg·min/L dans ce modèle) est un seuil pédagogique, pas une exigence réglementaire."
+  ],
+  "scenarios": [
+    {
+      "id": "calme",
+      "kicker": "Découverte",
+      "title": "Régime calme",
+      "summary": "La rivière est stable. Parcourez la station, changez un réglage, observez ce qui bouge en aval.",
+      "intent": "Prendre en main le poste de conduite et relier un capteur à l’ouvrage qui l’influence.",
+      "focusUnit": null,
+      "allowDemandControl": true,
+      "holdMinutes": 15,
+      "raw": {
+        "turbidityNtu": 22,
+        "ph": 7.2,
+        "temperatureC": 14,
+        "alkalinityMgL": 85,
+        "calciumMgL": 34,
+        "availableFlowM3h": 220
+      },
+      "flood": { "turbidityFactor": 2.4, "flowFactor": 1.25 },
+      "degrade": { "turbidityAdd": 50, "phDrop": 0.25 },
+      "demand": { "baseM3h": 140 },
+      "initialSettings": {
+        "intakeFlowM3h": 160,
+        "coagulant": "alum",
+        "coagulantDoseMgL": 16,
+        "phBeforeCoagulation": 7,
+        "polymerDoseMgL": 0.05,
+        "settlingFlowM3h": 180,
+        "filtrationFlowM3h": 180,
+        "limeDoseMgL": 6,
+        "co2DoseMgL": 4,
+        "chlorineDoseMgL": 0.35,
+        "demandOverrideM3h": 140
+      },
+      "initialAccumulators": {
+        "sludgePercent": 16,
+        "purgeRemainingH": 0,
+        "headlossBar": 0.24,
+        "backwashRemainingH": 0,
+        "reservoirM3": 620,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "turb",
+          "label": "Turbidité distribuée ≤ 1 NTU",
+          "metric": "deliveredTurbidity",
+          "op": "<=",
+          "value": 1
+        },
+        {
+          "id": "cl",
+          "label": "Chlore résiduel entre 0,12 et 0,55 mg/L",
+          "metric": "chlorine",
+          "op": "between",
+          "min": 0.12,
+          "max": 0.55
+        },
+        {
+          "id": "res",
+          "label": "Réservoir au-dessus de 35 %",
+          "metric": "reservoirRatio",
+          "op": ">=",
+          "value": 0.35
+        }
+      ]
+    },
+    {
+      "id": "crue",
+      "kicker": "Scénario",
+      "title": "Eau très turbide après une crue",
+      "summary": "La crue a chargé la rivière. Retrouvez une eau distribuable sans vider le réservoir.",
+      "intent": "Relier le dosage, la qualité des flocs et la turbidité qui arrive jusqu’au filtre.",
+      "focusUnit": "coagulation",
+      "allowDemandControl": false,
+      "holdMinutes": 20,
+      "raw": {
+        "turbidityNtu": 150,
+        "ph": 7.05,
+        "temperatureC": 11,
+        "alkalinityMgL": 62,
+        "calciumMgL": 26,
+        "availableFlowM3h": 250
+      },
+      "flood": { "turbidityFactor": 1.45, "flowFactor": 1.15 },
+      "degrade": { "turbidityAdd": 40, "phDrop": 0.2 },
+      "demand": { "baseM3h": 155 },
+      "initialSettings": {
+        "intakeFlowM3h": 170,
+        "coagulant": "alum",
+        "coagulantDoseMgL": 8,
+        "phBeforeCoagulation": 7.6,
+        "polymerDoseMgL": 0,
+        "settlingFlowM3h": 190,
+        "filtrationFlowM3h": 190,
+        "limeDoseMgL": 0,
+        "co2DoseMgL": 0,
+        "chlorineDoseMgL": 0.3,
+        "demandOverrideM3h": 0
+      },
+      "initialAccumulators": {
+        "sludgePercent": 22,
+        "purgeRemainingH": 0,
+        "headlossBar": 0.32,
+        "backwashRemainingH": 0,
+        "reservoirM3": 560,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "turb",
+          "label": "Turbidité distribuée ≤ 1 NTU",
+          "metric": "deliveredTurbidity",
+          "op": "<=",
+          "value": 1
+        },
+        {
+          "id": "cl",
+          "label": "Chlore résiduel entre 0,15 et 0,50 mg/L",
+          "metric": "chlorine",
+          "op": "between",
+          "min": 0.15,
+          "max": 0.5
+        },
+        {
+          "id": "res",
+          "label": "Réservoir au-dessus de 25 %",
+          "metric": "reservoirRatio",
+          "op": ">=",
+          "value": 0.25
+        }
+      ]
+    },
+    {
+      "id": "dosage",
+      "kicker": "Scénario",
+      "title": "Coagulant mal dosé",
+      "summary": "L’eau décantée reste trouble. Le filtre n’est pas le premier endroit où chercher.",
+      "intent": "Diagnostiquer une coagulation hors plage et voir la décantation se dégrader avec elle.",
+      "focusUnit": "coagulation",
+      "allowDemandControl": false,
+      "holdMinutes": 15,
+      "raw": {
+        "turbidityNtu": 48,
+        "ph": 7.3,
+        "temperatureC": 15,
+        "alkalinityMgL": 95,
+        "calciumMgL": 38,
+        "availableFlowM3h": 210
+      },
+      "flood": { "turbidityFactor": 2.1, "flowFactor": 1.2 },
+      "degrade": { "turbidityAdd": 35, "phDrop": 0.2 },
+      "demand": { "baseM3h": 150 },
+      "initialSettings": {
+        "intakeFlowM3h": 165,
+        "coagulant": "alum",
+        "coagulantDoseMgL": 72,
+        "phBeforeCoagulation": 8.3,
+        "polymerDoseMgL": 0.4,
+        "settlingFlowM3h": 170,
+        "filtrationFlowM3h": 170,
+        "limeDoseMgL": 4,
+        "co2DoseMgL": 2,
+        "chlorineDoseMgL": 0.45,
+        "demandOverrideM3h": 0
+      },
+      "initialAccumulators": {
+        "sludgePercent": 28,
+        "purgeRemainingH": 0,
+        "headlossBar": 0.55,
+        "backwashRemainingH": 0,
+        "reservoirM3": 600,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "settle",
+          "label": "Turbidité décantée ≤ 4 NTU",
+          "metric": "settledTurbidity",
+          "op": "<=",
+          "value": 4
+        },
+        {
+          "id": "turb",
+          "label": "Turbidité distribuée ≤ 1 NTU",
+          "metric": "deliveredTurbidity",
+          "op": "<=",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "filtre",
+      "kicker": "Scénario",
+      "title": "Filtre colmaté",
+      "summary": "La perte de charge a grimpé. La station ne tient plus le débit demandé.",
+      "intent": "Décider d’un lavage, puis vérifier que la capacité et la qualité reviennent.",
+      "focusUnit": "filtration",
+      "allowDemandControl": false,
+      "holdMinutes": 12,
+      "raw": {
+        "turbidityNtu": 16,
+        "ph": 7.1,
+        "temperatureC": 13,
+        "alkalinityMgL": 80,
+        "calciumMgL": 32,
+        "availableFlowM3h": 230
+      },
+      "flood": { "turbidityFactor": 2.2, "flowFactor": 1.2 },
+      "degrade": { "turbidityAdd": 30, "phDrop": 0.15 },
+      "demand": { "baseM3h": 165 },
+      "initialSettings": {
+        "intakeFlowM3h": 180,
+        "coagulant": "alum",
+        "coagulantDoseMgL": 14,
+        "phBeforeCoagulation": 7,
+        "polymerDoseMgL": 0.05,
+        "settlingFlowM3h": 190,
+        "filtrationFlowM3h": 190,
+        "limeDoseMgL": 5,
+        "co2DoseMgL": 3,
+        "chlorineDoseMgL": 0.4,
+        "demandOverrideM3h": 0
+      },
+      "initialAccumulators": {
+        "sludgePercent": 30,
+        "purgeRemainingH": 0,
+        "headlossBar": 2.15,
+        "backwashRemainingH": 0,
+        "reservoirM3": 480,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "hl",
+          "label": "Perte de charge ≤ 0,40 bar",
+          "metric": "headloss",
+          "op": "<=",
+          "value": 0.4
+        },
+        {
+          "id": "prod",
+          "label": "Production ≥ 150 m³/h",
+          "metric": "production",
+          "op": ">=",
+          "value": 150
+        },
+        {
+          "id": "turb",
+          "label": "Turbidité filtrée ≤ 0,8 NTU",
+          "metric": "filteredTurbidity",
+          "op": "<=",
+          "value": 0.8
+        }
+      ]
+    },
+    {
+      "id": "equilibre",
+      "kicker": "Scénario",
+      "title": "pH et eau déséquilibrée",
+      "summary": "Le pH affiché peut sembler acceptable. L’indice de saturation raconte autre chose.",
+      "intent": "Ajuster chaux et CO₂ jusqu’à une eau ni agressive ni entartrante.",
+      "focusUnit": "remineralization",
+      "allowDemandControl": false,
+      "holdMinutes": 15,
+      "raw": {
+        "turbidityNtu": 6,
+        "ph": 8.2,
+        "temperatureC": 16,
+        "alkalinityMgL": 16,
+        "calciumMgL": 8,
+        "availableFlowM3h": 200
+      },
+      "flood": { "turbidityFactor": 2, "flowFactor": 1.15 },
+      "degrade": { "turbidityAdd": 20, "phDrop": 0.1 },
+      "demand": { "baseM3h": 130 },
+      "initialSettings": {
+        "intakeFlowM3h": 140,
+        "coagulant": "pac",
+        "coagulantDoseMgL": 4,
+        "phBeforeCoagulation": 8,
+        "polymerDoseMgL": 0,
+        "settlingFlowM3h": 160,
+        "filtrationFlowM3h": 160,
+        "limeDoseMgL": 0,
+        "co2DoseMgL": 0,
+        "chlorineDoseMgL": 0.3,
+        "demandOverrideM3h": 0
+      },
+      "initialAccumulators": {
+        "sludgePercent": 10,
+        "purgeRemainingH": 0,
+        "headlossBar": 0.18,
+        "backwashRemainingH": 0,
+        "reservoirM3": 640,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "ph",
+          "label": "pH distribué entre 7,4 et 8,2",
+          "metric": "ph",
+          "op": "between",
+          "min": 7.4,
+          "max": 8.2
+        },
+        {
+          "id": "lsi",
+          "label": "Indice de saturation entre −0,20 et +0,35",
+          "metric": "lsi",
+          "op": "between",
+          "min": -0.2,
+          "max": 0.35
+        },
+        {
+          "id": "turb",
+          "label": "Turbidité distribuée ≤ 1 NTU",
+          "metric": "deliveredTurbidity",
+          "op": "<=",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "pointe",
+      "kicker": "Scénario",
+      "title": "Pointe de consommation",
+      "summary": "La demande est passée à 250 m³/h. Le réservoir encaisse un moment, pas indéfiniment.",
+      "intent": "Rapprocher la production de la demande sans dépasser ce que la décantation et la désinfection supportent.",
+      "focusUnit": "storage",
+      "allowDemandControl": false,
+      "holdMinutes": 30,
+      "raw": {
+        "turbidityNtu": 70,
+        "ph": 7.15,
+        "temperatureC": 14,
+        "alkalinityMgL": 78,
+        "calciumMgL": 30,
+        "availableFlowM3h": 280
+      },
+      "flood": { "turbidityFactor": 2.3, "flowFactor": 1.1 },
+      "degrade": { "turbidityAdd": 40, "phDrop": 0.2 },
+      "demand": { "baseM3h": 250 },
+      "initialSettings": {
+        "intakeFlowM3h": 175,
+        "coagulant": "alum",
+        "coagulantDoseMgL": 28,
+        "phBeforeCoagulation": 7,
+        "polymerDoseMgL": 0.05,
+        "settlingFlowM3h": 185,
+        "filtrationFlowM3h": 185,
+        "limeDoseMgL": 6,
+        "co2DoseMgL": 4,
+        "chlorineDoseMgL": 0.4,
+        "demandOverrideM3h": 0
+      },
+      "initialAccumulators": {
+        "sludgePercent": 18,
+        "purgeRemainingH": 0,
+        "headlossBar": 0.3,
+        "backwashRemainingH": 0,
+        "reservoirM3": 210,
+        "hours": 0,
+        "holdHours": 0
+      },
+      "goals": [
+        {
+          "id": "res",
+          "label": "Réservoir au-dessus de 22 %",
+          "metric": "reservoirRatio",
+          "op": ">=",
+          "value": 0.22
+        },
+        {
+          "id": "turb",
+          "label": "Turbidité distribuée ≤ 1 NTU",
+          "metric": "deliveredTurbidity",
+          "op": "<=",
+          "value": 1
+        },
+        {
+          "id": "cl",
+          "label": "Chlore résiduel entre 0,12 et 0,55 mg/L",
+          "metric": "chlorine",
+          "op": "between",
+          "min": 0.12,
+          "max": 0.55
+        }
+      ]
+    }
+  ]
+}
