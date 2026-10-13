@@ -123,6 +123,11 @@
 		<div class="brand">
 			<p class="mark">Station d’eau potable</p>
 			<h1>Rivière Blanche</h1>
+			<p class="plant-switch">
+				<a href="/bastide">La Bastide, Limoges</a>
+				<a href="/desinfection">Désinfection</a>
+				<a href="/laboratoire">Laboratoire</a>
+			</p>
 		</div>
 		<nav class="scenarios" aria-label="Scénarios">
 			{#each scenarios as item (item.id)}

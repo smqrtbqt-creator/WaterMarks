@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "sim": "tsx scripts/check-sim.ts"
+		"sim": "tsx scripts/check-sim.ts && tsx scripts/check-bastide.ts && tsx scripts/check-disinfection.ts && tsx scripts/check-simulator.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^5.4.0",

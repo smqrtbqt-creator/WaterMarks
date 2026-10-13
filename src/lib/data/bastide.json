@@ -1,0 +1,900 @@
+{
+	"facts": [
+		{
+			"id": "site",
+			"value": "Station de l’eau de La Bastide, Limoges",
+			"unit": null,
+			"category": "official",
+			"description": "Site de production d’eau potable dont la chaîne simulée s’inspire. Le château d’eau stocke l’eau déjà traitée : ce n’est pas le lieu des opérations de potabilisation.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "resources",
+			"value": "Retenues des monts d’Ambazac et pompage dans la Vienne",
+			"unit": null,
+			"category": "official",
+			"description": "Ressources en eau indiquées : principalement les réservoirs des monts d’Ambazac, avec également un pompage dans la Vienne.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "production-m3-day",
+			"value": 30000,
+			"unit": "m³/j",
+			"category": "official",
+			"description": "Production annoncée dans le rapport. Ce n’est pas un débit horaire mesuré.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "production-mean-m3h",
+			"value": 1250,
+			"unit": "m³/h",
+			"category": "educational_assumption",
+			"description": "Moyenne arithmétique 30 000 / 24. Repère de charge hydraulique dans le modèle. Ce n’est pas un débit de pointe mesuré à La Bastide.",
+			"source": "Calcul à partir du volume journalier indiqué dans le rapport 2024.",
+			"context": "hypothèse de simulation"
+		},
+		{
+			"id": "yield-2023-percent",
+			"value": 96,
+			"unit": "%",
+			"category": "official",
+			"description": "Rendement de la station indiqué pour 2023.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2023"
+		},
+		{
+			"id": "distributed-2023-m3",
+			"value": 11000000,
+			"unit": "m³",
+			"category": "official",
+			"description": "Volume d’eau potable distribué en 2023, de l’ordre de 11 millions de m³.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2023, ordre de grandeur"
+		},
+		{
+			"id": "population",
+			"value": 210000,
+			"unit": "personnes",
+			"category": "official",
+			"description": "Le service public dessert environ 210 000 personnes à l’échelle du périmètre de production et de fourniture indiqué dans le rapport.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024, environ"
+		},
+		{
+			"id": "tank-count",
+			"value": 2,
+			"unit": "cuves",
+			"category": "official",
+			"description": "Le château d’eau comporte deux cuves de stockage d’eau potable.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "tank-unit-m3",
+			"value": 625,
+			"unit": "m³",
+			"category": "official",
+			"description": "Capacité d’une cuve : 625 000 litres, soit 625 m³.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "tank-total-m3",
+			"value": 1250,
+			"unit": "m³",
+			"category": "official",
+			"description": "Capacité totale nominale des deux cuves. Le simulateur la recalcule par 625 × 2.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "tank-year",
+			"value": 1967,
+			"unit": null,
+			"category": "official",
+			"description": "Année de construction du château d’eau indiquée dans le rapport.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "1967"
+		},
+		{
+			"id": "tank-height-m",
+			"value": 8,
+			"unit": "m",
+			"category": "official",
+			"description": "Hauteur des cuves mentionnée dans le rapport.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "tank-lining",
+			"value": "Remplacement progressif de l’ancien revêtement époxy par de l’inox",
+			"unit": null,
+			"category": "official",
+			"description": "Réfection du revêtement des cuves.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "tank-renovation-eur",
+			"value": 855000,
+			"unit": "€",
+			"category": "official",
+			"description": "Coût annoncé du projet de rénovation des cuves. Ce n’est pas un coût de réactifs de la simulation.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "instruments",
+			"value": "Plus de 50 instruments, sondes et analyseurs",
+			"unit": null,
+			"category": "official",
+			"description": "Surveillance en continu de la qualité de l’eau. Cela ne signifie pas que chaque grandeur simulée est mesurée par un capteur du site.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "lab-frequency",
+			"value": "Analyses de laboratoire deux fois par semaine",
+			"unit": null,
+			"category": "official",
+			"description": "Paramètres minéraux, organiques et micropolluants, selon le rapport.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "pesticides",
+			"value": "Plus de 150 pesticides et dérivés",
+			"unit": null,
+			"category": "official",
+			"description": "Les analyses mentionnées comprennent plus de 150 pesticides et dérivés. Le modèle ne simule pas chaque molécule.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "chlorine-devices",
+			"value": "Environ 40 appareils en ligne",
+			"unit": null,
+			"category": "official",
+			"description": "Appareils qui surveillent et ajustent le chlore dans le réseau de distribution. Le rapport indique aussi des contrôles ponctuels du réseau.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "reagents",
+			"value": "Chaux, chlorure ferrique (FeCl₃) et polyamine",
+			"unit": null,
+			"category": "official",
+			"description": "Réactifs cités pour la coagulation-floculation. Leurs dosages réels ne sont pas fournis.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "doses-unknown",
+			"value": "Non fournis",
+			"unit": null,
+			"category": "official",
+			"description": "Les dosages d’exploitation de La Bastide ne figurent pas dans les données de référence. Tout mg/L affiché dans la simulation est une hypothèse pédagogique.",
+			"source": "Absence dans le rapport tel qu’utilisé pour cette simulation, et dans la page de modernisation citée.",
+			"context": "2024"
+		},
+		{
+			"id": "filter-media",
+			"value": "Sable de rivière et sable manganifère",
+			"unit": null,
+			"category": "official",
+			"description": "Médias cités. Le modèle les réunit en un seul filtre pédagogique et n’invente pas de fréquence de lavage.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "carbon-origin",
+			"value": "Charbon issu de coques de noix de coco",
+			"unit": null,
+			"category": "official",
+			"description": "Origine du charbon actif granulaire mentionnée dans le rapport. L’état de saturation réglable est une hypothèse.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "ph-practice",
+			"value": 8.2,
+			"unit": "unité pH",
+			"category": "official",
+			"description": "Le rapport indique un ajustement du pH vers 8,2 par ajout de soude. C’est une pratique citée pour ce site, pas une cible universelle ni une limite réglementaire.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "remineralization",
+			"value": "Reminéralisation à la chaux et au CO₂",
+			"unit": null,
+			"category": "official",
+			"description": "Opération citée, distincte de l’ajustement final du pH à la soude.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "emergency-ops",
+			"value": "Pré-oxydation à l’ozone ou charbon actif en poudre",
+			"unit": null,
+			"category": "official",
+			"description": "Opérations mentionnées pour certains contextes de pollution accidentelle ou de surcharge organique. Les doses simulées ne sont pas des consignes du site.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "process-chain",
+			"value": "Captage, dégrillage, coagulation-floculation, décantation, filtration sur sable, ozonation, charbon actif, UV, reminéralisation, ajustement de pH, chloration, stockage",
+			"unit": null,
+			"category": "official",
+			"description": "Ordre général de la chaîne représentée, inspiré des opérations décrites. Les réglages de chaque étape sont pédagogiques.",
+			"source": "Rapport de développement durable 2024 de Limoges Métropole, partie consacrée à la station de l’eau de La Bastide.",
+			"context": "2024"
+		},
+		{
+			"id": "modernization-page",
+			"value": "https://www.limoges-metropole.fr/informations-transversales/actualites/station-de-leau-des-installations-modernisees-desormais-en-service-363766",
+			"unit": null,
+			"category": "official",
+			"description": "Page institutionnelle sur la modernisation de la station. Elle ne confirme pas, à elle seule, chaque chiffre de production ou de stockage utilisé ici.",
+			"source": "Limoges Métropole.",
+			"context": "page institutionnelle"
+		},
+		{
+			"id": "turb-limit-nfu",
+			"value": 1,
+			"unit": "NFU",
+			"category": "regulatory_reference",
+			"description": "Limite de qualité pour la turbidité. Elle s’applique au point de mise en distribution, pour les eaux visées à l’article R. 1321-37 et pour les eaux d’origine souterraine provenant de milieux fissurés présentant une turbidité périodique supérieure à 2,0 NFU. En cas de neutralisation ou de reminéralisation, elle s’applique hors augmentation éventuelle de turbidité due au traitement. Le modèle parle en NTU : la comparaison numérique est pédagogique et ne constitue pas un contrôle de La Bastide.",
+			"source": "Arrêté du 11 janvier 2007 relatif aux limites et références de qualité des eaux brutes et des eaux destinées à la consommation humaine, annexe I, modifié par l’arrêté du 30 décembre 2022 (JORF du 31 décembre 2022).",
+			"context": "eaux destinées à la consommation humaine, hors eaux conditionnées"
+		},
+		{
+			"id": "turb-ref-distribution-nfu",
+			"value": 0.5,
+			"unit": "NFU",
+			"category": "regulatory_reference",
+			"description": "Référence de qualité pour la turbidité au point de mise en distribution, avec le même champ d’application que la limite de 1,0 NFU. Ce n’est pas la limite de qualité.",
+			"source": "Arrêté du 11 janvier 2007, annexe I, modifié par l’arrêté du 30 décembre 2022.",
+			"context": "point de mise en distribution"
+		},
+		{
+			"id": "turb-ref-tap-nfu",
+			"value": 2,
+			"unit": "NFU",
+			"category": "regulatory_reference",
+			"description": "Référence de qualité applicable aux robinets normalement utilisés pour la consommation humaine.",
+			"source": "Arrêté du 11 janvier 2007, annexe I, modifié par l’arrêté du 30 décembre 2022.",
+			"context": "robinet du consommateur"
+		},
+		{
+			"id": "ph-min",
+			"value": 6.5,
+			"unit": "unité pH",
+			"category": "regulatory_reference",
+			"description": "Borne basse de la référence de qualité du pH. Les eaux ne doivent pas être agressives. Ce n’est pas la pratique de 8,2 citée pour La Bastide.",
+			"source": "Arrêté du 11 janvier 2007, annexe I, modifié par l’arrêté du 30 décembre 2022.",
+			"context": "eaux destinées à la consommation humaine, hors eaux conditionnées"
+		},
+		{
+			"id": "ph-max",
+			"value": 9,
+			"unit": "unité pH",
+			"category": "regulatory_reference",
+			"description": "Borne haute de la référence de qualité du pH. Les eaux ne doivent pas être agressives.",
+			"source": "Arrêté du 11 janvier 2007, annexe I, modifié par l’arrêté du 30 décembre 2022.",
+			"context": "eaux destinées à la consommation humaine, hors eaux conditionnées"
+		},
+		{
+			"id": "chlorine-band-low",
+			"value": 0.1,
+			"unit": "mg/L",
+			"category": "educational_assumption",
+			"description": "Plancher pédagogique du chlore résiduel simulé dans le réseau. Ce n’est pas une limite réglementaire.",
+			"source": "Hypothèse de la simulation, pour discuter l’intérêt d’un désinfectant résiduel.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "chlorine-band-high",
+			"value": 0.4,
+			"unit": "mg/L",
+			"category": "educational_assumption",
+			"description": "Plafond pédagogique du chlore résiduel simulé dans le réseau. Ce n’est pas une limite réglementaire.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "chlorine-decay-per-hour",
+			"value": 0.035,
+			"unit": "1/h",
+			"category": "educational_assumption",
+			"description": "Constante de base de la décroissance du chlore pendant le séjour : résiduel × exp(−k × temps de séjour). k augmente un peu avec la charge organique simulée.",
+			"source": "Hypothèse de la simulation. Pas une cinétique mesurée à La Bastide.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "ferric-dose-k",
+			"value": 2.2,
+			"unit": "mg/L par √NTU",
+			"category": "educational_assumption",
+			"description": "Repère illustratif : dose de FeCl₃ proche du sommet de la courbe ≈ 2,2 × √(turbidité). Au-delà, le rendement pédagogique baisse.",
+			"source": "Hypothèse de la simulation. Les dosages réels de La Bastide ne sont pas connus.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "ferric-ph-center",
+			"value": 6.9,
+			"unit": "unité pH",
+			"category": "educational_assumption",
+			"description": "Centre de la fenêtre de pH illustratif pour le chlorure ferrique dans ce modèle.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "ferric-ph-half-width",
+			"value": 0.85,
+			"unit": "unité pH",
+			"category": "educational_assumption",
+			"description": "Largeur de la fenêtre de pH illustratif. La chaux de coagulation sert à s’en approcher ; trop de chaux en sort.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "lime-ph-per-mg",
+			"value": 0.04,
+			"unit": "unité pH par mg/L",
+			"category": "educational_assumption",
+			"description": "Hausse de pH illustrative par mg/L de chaux ajoutée à la coagulation.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "ferric-ph-drop-per-mg",
+			"value": 0.018,
+			"unit": "unité pH par mg/L",
+			"category": "educational_assumption",
+			"description": "Baisse de pH illustrative par mg/L de chlorure ferrique, liée à la consommation d’alcalinité.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "polyamine-useful-mg-l",
+			"value": 0.4,
+			"unit": "mg/L",
+			"category": "educational_assumption",
+			"description": "Dose de polyamine au-delà de laquelle le gain pédagogique plafonne, puis se dégrade si l’excès est fort. La polyamine n’est pas un substitut du coagulant.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "soda-ph-per-mg",
+			"value": 0.05,
+			"unit": "unité pH par mg/L",
+			"category": "educational_assumption",
+			"description": "Hausse de pH illustrative par mg/L de soude, après la reminéralisation. La soude ne reminéralise pas l’eau.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "microbial-goal",
+			"value": 8,
+			"unit": "indice 0–100",
+			"category": "educational_assumption",
+			"description": "Objectif pédagogique de risque microbiologique simulé en sortie. Ce n’est ni un dénombrement, ni une limite réglementaire.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "taste-goal",
+			"value": 30,
+			"unit": "indice 0–100",
+			"category": "educational_assumption",
+			"description": "Objectif pédagogique de l’indice de goût et d’odeur après charbon. Ce n’est pas une mesure du site.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "sparing-dose-max",
+			"value": 70,
+			"unit": "indice",
+			"category": "educational_assumption",
+			"description": "Plafond pédagogique de l’indice de réactifs pour la mission « ne pas gaspiller ». L’indice est une somme pondérée des doses, pas un coût réel.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		},
+		{
+			"id": "storage-ratio-min",
+			"value": 0.25,
+			"unit": "fraction",
+			"category": "educational_assumption",
+			"description": "Plancher pédagogique du taux de remplissage des cuves en service.",
+			"source": "Hypothèse de la simulation.",
+			"context": "modèle éducatif"
+		}
+	],
+	"lessons": {
+		"intake": {
+			"objective": "Choisir la ressource et le débit d’eau brute qui entrent dans la filière.",
+			"phenomenon": "Les retenues des monts d’Ambazac et la Vienne n’ont pas la même eau. Le modèle les mélange selon la part de Vienne que vous réglez, puis applique vos écarts pédagogiques de turbidité, de pH, de température et de charge organique.",
+			"parameters": "Part de Vienne, débit capté, et écarts pédagogiques de turbidité, température, pH et charge organique.",
+			"low": "Un débit trop faible ne couvre pas la demande : les cuves se vident.",
+			"adapted": "Le débit traité suit le plus petit des débits de captage, de filière et de filtration.",
+			"high": "Un débit capté supérieur au débit de filière n’est pas traité dans ce modèle. Une eau plus trouble ou plus organique durcit la suite.",
+			"indicators": "Turbidité, pH, température, matières en suspension, charge organique et matières grossières de l’eau brute.",
+			"limits": "Les qualités d’Ambazac et de la Vienne sont des hypothèses de scénario, pas des analyses de La Bastide."
+		},
+		"screen": {
+			"objective": "Retirer les matières grossières : feuilles, pierres, débris.",
+			"phenomenon": "Le dégrillage arrête ce qui est gros. Les particules fines qui font la turbidité passent.",
+			"parameters": "Ouverture efficace du prétraitement, de 0 à 100 %.",
+			"low": "S’il est presque fermé ou inefficace, les débris restent et iront plus loin.",
+			"adapted": "Les matières grossières chutent, la turbidité presque pas.",
+			"high": "L’ouvrir à fond ne clarifie pas une eau de crue.",
+			"indicators": "Indice de matières grossières, à comparer à la turbidité et aux matières en suspension.",
+			"limits": "L’indice de débris n’est pas une mesure du site. Aucune maille réelle n’est connue ici."
+		},
+		"coagulation": {
+			"objective": "Rassembler les particules fines en flocs que la décantation pourra déposer.",
+			"phenomenon": "Le chlorure ferrique déstabilise les particules. La chaux déplace le pH. La polyamine aide les flocs déjà ébauchés. La courbe de dose a un sommet : trop peu ou trop de réactif dégrade le résultat.",
+			"parameters": "Doses pédagogiques de FeCl₃, de chaux et de polyamine. En urgence : pré-ozonation ou charbon actif en poudre.",
+			"low": "Sans assez de coagulant, ou hors de la fenêtre de pH, les flocs restent rares et la décantation décroche.",
+			"adapted": "Le repère illustratif est environ 2,2 × √(turbidité) mg/L de FeCl₃, avec un pH proche de 6,9. Ce n’est pas une consigne de La Bastide.",
+			"high": "Un excès de fer, de chaux ou de polyamine laisse plus de turbidité et augmente l’indice de réactifs.",
+			"indicators": "Turbidité avant et après, pH, indice de floc, matières en suspension.",
+			"limits": "Les dosages réels du site ne sont pas connus. La pré-ozone et le charbon en poudre sont cités pour des pollutions ou des surcharges ; leurs doses ici sont inventées pour l’exercice."
+		},
+		"settling": {
+			"objective": "Laisser les flocs se déposer.",
+			"phenomenon": "Le dépôt dépend de la qualité des flocs, du temps de séjour et de la charge hydraulique. Une eau froide décante un peu moins bien dans ce modèle. De mauvais flocs ne se rattrapent pas en allongeant seulement le temps.",
+			"parameters": "Temps de séjour pédagogique et débit de filière, d’où se calcule la charge par rapport à 1 250 m³/h.",
+			"low": "Un séjour trop court ou une charge trop forte laisse les flocs partir avec l’eau.",
+			"adapted": "De bons flocs et un séjour de l’ordre de 1,5 à 2 h autour du débit moyen calculé font chuter la turbidité.",
+			"high": "Allonger le séjour au-delà du plafond du modèle n’éclaircit plus. Surcharger la filière annule une partie du gain.",
+			"indicators": "Turbidité et matières en suspension résiduelles, charge hydraulique, temps de séjour effectif.",
+			"limits": "Le volume des décanteurs de La Bastide n’est pas connu. Le temps de séjour est un curseur pédagogique, pas un temps d’exploitation."
+		},
+		"sand": {
+			"objective": "Retenir la turbidité restante sur sable de rivière et sable manganifère.",
+			"phenomenon": "Un filtre propre et un débit modéré retiennent les fines. Un filtre colmaté ou un débit trop fort laissent passer de la turbidité, même si l’eau d’entrée est déjà claire.",
+			"parameters": "Débit de filtration et état du filtre, de propre à colmaté. Le lavage remet un état pédagogique, sans fréquence réelle.",
+			"low": "Un débit très faible limite la production et peut vider les cuves si la demande continue.",
+			"adapted": "Filtre peu colmaté et débit proche ou en dessous de 1 250 m³/h : la turbidité chute fortement.",
+			"high": "Colmatage ou survitesse : la turbidité résiduelle remonte. Le sable ne désinfecte presque pas dans ce modèle.",
+			"indicators": "Turbidité avant et après filtration, état du filtre.",
+			"limits": "Les deux sables sont réunis en un seul ouvrage. Aucune fréquence de lavage du site n’est simulée. Le colmatage qui avance avec le temps est accéléré pour la classe."
+		},
+		"ozone": {
+			"objective": "Première désinfection, et réduction d’une partie de la matière organique.",
+			"phenomenon": "L’effet dépend du produit dose × temps de contact, comparé à un besoin qui augmente avec la charge organique et le risque microbiologique simulés.",
+			"parameters": "Dose pédagogique d’ozone et temps de contact.",
+			"low": "Dose ou contact insuffisants : le risque microbiologique reste élevé. L’ozone ne clarifie pas l’eau.",
+			"adapted": "Un couple dose / contact suffisant fait chuter le risque et une partie de la charge organique.",
+			"high": "Au-delà du plateau du modèle, augmenter encore la dose coûte des réactifs sans gain proportionnel.",
+			"indicators": "Risque microbiologique et charge organique avant et après. La turbidité doit rester presque la même.",
+			"limits": "Aucune consigne d’ozone de La Bastide n’est utilisée. L’indice microbiologique n’est pas un dénombrement."
+		},
+		"carbon": {
+			"objective": "Retenir une partie des composés de goût, d’odeur et de couleur sur charbon de coques de noix de coco.",
+			"phenomenon": "Le charbon adsorbe. Plus il est saturé, moins il retient. Il ne désinfecte pas, et il ne peut pas absorber une pollution très forte à lui seul.",
+			"parameters": "État du charbon, de frais à saturé. Le renouvellement de charge est un geste pédagogique, pas un calendrier d’exploitation.",
+			"low": "Charbon saturé : le goût et la couleur restent.",
+			"adapted": "Charbon frais : l’indice de goût baisse, dans la limite de ce que le modèle autorise.",
+			"high": "Un charbon déjà frais ne gagne plus rien. Une surcharge organique demande aussi la pré-ozone ou le charbon en poudre.",
+			"indicators": "Indices de goût, de couleur et de charge organique.",
+			"limits": "La saturation n’est pas une mesure du site. Le modèle ne suit pas chaque pesticide parmi les plus de 150 molécules citées."
+		},
+		"uv": {
+			"objective": "Deuxième désinfection, par rayonnement ultraviolet.",
+			"phenomenon": "La dose reçue dépend de l’intensité, de l’état de la lampe et du débit. Une eau encore trouble arrête une partie du rayonnement : une eau claire mal désinfectée reste possible si la lampe est faible.",
+			"parameters": "Intensité UV, état de la lampe, et débit déjà réglé en amont.",
+			"low": "Lampe faible, éteinte, ou eau trop trouble : le risque microbiologique ne descend pas assez.",
+			"adapted": "Eau peu trouble, lampe en bon état, intensité haute : le risque chute fortement.",
+			"high": "Au plafond du modèle, plus d’intensité ne change plus le résultat. Les UV ne retirent ni le goût ni la turbidité.",
+			"indicators": "Risque microbiologique avant et après, et turbidité à l’entrée des UV.",
+			"limits": "Aucune dose UV réelle du site n’est connue. L’indice n’est pas une mesure de transmittance."
+		},
+		"remineralization": {
+			"objective": "Reminéraliser à la chaux et au CO₂, avant l’ajustement final à la soude.",
+			"phenomenon": "La chaux apporte du calcium et de l’alcalinité. Le CO₂ équilibre la réaction. Trop de chaux seule relève fort le pH ; trop de CO₂ seul l’abaisse. Ce n’est pas le même levier que la soude.",
+			"parameters": "Doses pédagogiques de chaux et de CO₂.",
+			"low": "Sans apport, une eau peu minérale reste peu minérale. Le pH bouge peu.",
+			"adapted": "Chaux et CO₂ du même ordre : le calcium et l’alcalinité montent sans envolée du pH.",
+			"high": "Un fort excès de l’un des deux déséquilibre le pH. L’indice de Langelier affiché est pédagogique.",
+			"indicators": "pH, calcium et alcalinité simulés, indice de Langelier pédagogique.",
+			"limits": "Les doses réelles ne sont pas connues. Le calcium et l’alcalinité de départ sont des hypothèses de scénario. L’indice de Langelier n’est pas une mesure de La Bastide."
+		},
+		"finish": {
+			"objective": "Ajuster le pH à la soude, puis chlorer avant le stockage.",
+			"phenomenon": "La soude relève le pH sans reminéraliser. Le chlore laisse un résiduel seulement après avoir satisfait une demande qui augmente avec la turbidité, la matière organique et le risque encore présent. Le rapport cite un ajustement vers 8,2 : c’est une pratique du site, pas l’unique pH correct.",
+			"parameters": "Dose pédagogique de soude et dose pédagogique de chlore.",
+			"low": "Peu de chlore : le résiduel tombe à zéro et le réseau simulé n’est plus protégé. Un pH sous 6,5 sort de la référence réglementaire citée.",
+			"adapted": "pH dans la référence 6,5 à 9, et résiduel qui pourra rester dans la bande pédagogique après le séjour.",
+			"high": "Trop de soude dépasse pH 9. Trop de chlore sort de la bande pédagogique 0,10 à 0,40 mg/L, qui n’est pas une limite légale.",
+			"indicators": "pH final et chlore résiduel à la chloration, avant le séjour dans les cuves.",
+			"limits": "8,2 est affiché comme repère cité, pas comme condition de réussite. Aucune consigne de chlore du site n’est utilisée."
+		},
+		"storage": {
+			"objective": "Stocker l’eau potable dans les deux cuves et alimenter le réseau.",
+			"phenomenon": "Chaque cuve fait 625 m³, soit 1 250 m³ à deux. Le niveau suit la production moins la demande. Le chlore résiduel baisse pendant le séjour : résiduel × exp(−k × volume / demande). Un long séjour avec peu de demande le consomme.",
+			"parameters": "Demande du réseau et nombre de cuves en service. La production vient des débits d’amont.",
+			"low": "Demande supérieure à la production : les cuves se vident. Une seule cuve en service divise la capacité par deux.",
+			"adapted": "Production et demande se tiennent, le niveau reste au-dessus du plancher pédagogique, et il reste un résiduel dans le réseau simulé.",
+			"high": "Les cuves ne dépassent pas leur capacité. Un très long séjour peut faire disparaître le résiduel même si la chloration était correcte.",
+			"indicators": "Volume, taux de remplissage, chlore à la chloration et chlore après séjour.",
+			"limits": "La cinétique du chlore est pédagogique. Le château d’eau ne traite pas l’eau : il la stocke. La hauteur de 8 m et le coût de rénovation de 855 000 € sont des données du site, pas des leviers du modèle."
+		}
+	},
+	"scenarios": [
+		{
+			"id": "claire",
+			"kicker": "Eau filtrée",
+			"title": "Eau relativement claire",
+			"summary": "La clarification est déjà presque en place. Le risque microbiologique et le chlore résiduel ne suivent pas : une eau claire peut rester insuffisamment désinfectée.",
+			"focus": "ozone",
+			"ambazac": {
+				"turbidityNtu": 8,
+				"ph": 7,
+				"temperatureC": 10,
+				"ssMgL": 6,
+				"organic": 22,
+				"microbial": 55,
+				"taste": 16,
+				"color": 12,
+				"debris": 30,
+				"calciumMgL": 12,
+				"alkalinityMgL": 28,
+				"tdsMgL": 120
+			},
+			"vienne": {
+				"turbidityNtu": 18,
+				"ph": 7.4,
+				"temperatureC": 14,
+				"ssMgL": 12,
+				"organic": 36,
+				"microbial": 60,
+				"taste": 26,
+				"color": 20,
+				"debris": 40,
+				"calciumMgL": 28,
+				"alkalinityMgL": 55,
+				"tdsMgL": 210
+			},
+			"initialSettings": {
+				"vienneSharePct": 15,
+				"intakeFlowM3h": 900,
+				"rawTurbidityAddNtu": 0,
+				"rawTempOffsetC": 0,
+				"rawPhOffset": 0,
+				"rawOrganicAdd": 0,
+				"screenOpenPct": 85,
+				"ferricMgL": 8,
+				"limeCoagMgL": 6,
+				"polyamineMgL": 0.3,
+				"settlingHours": 2,
+				"plantFlowM3h": 900,
+				"sandFlowM3h": 900,
+				"ozoneMgL": 0.15,
+				"ozoneContactMin": 3,
+				"uvIntensityPct": 20,
+				"lampPct": 20,
+				"reminLimeMgL": 12,
+				"reminCo2MgL": 16,
+				"sodaMgL": 4,
+				"chlorineMgL": 0.15,
+				"demandM3h": 500,
+				"tanksOnline": 2,
+				"preOzone": false,
+				"pacMgL": 0
+			},
+			"initialAccumulators": { "hours": 0, "tankM3": 900, "sandState": 12, "carbonState": 15 },
+			"missions": [
+				{
+					"id": "turb-limit",
+					"label": "Turbidité sous 1,0",
+					"basis": "regulatory_reference",
+					"hint": "Comparer la turbidité simulée à la limite de 1,0 NFU, sans confondre les unités ni en faire un contrôle du site."
+				},
+				{
+					"id": "ph-band",
+					"label": "pH entre 6,5 et 9",
+					"basis": "regulatory_reference",
+					"hint": "Référence de qualité citée. 8,2 reste une pratique du rapport, pas la condition de réussite."
+				},
+				{
+					"id": "microbial",
+					"label": "Risque microbiologique bas",
+					"basis": "educational_assumption",
+					"hint": "L’eau peut être claire en sortie de filtre et encore mal désinfectée."
+				},
+				{
+					"id": "chlorine-band",
+					"label": "Chlore résiduel dans la bande pédagogique",
+					"basis": "educational_assumption",
+					"hint": "Bande 0,10 à 0,40 mg/L après séjour. Ce n’est pas une limite légale."
+				},
+				{
+					"id": "storage",
+					"label": "Cuves assez pleines",
+					"basis": "educational_assumption",
+					"hint": "Garder un volume stocké au-dessus du plancher pédagogique."
+				},
+				{
+					"id": "sparing",
+					"label": "Sans gaspiller les réactifs",
+					"basis": "educational_assumption",
+					"hint": "Un excès de dose peut clarifier tout en ratant cette mission."
+				}
+			]
+		},
+		{
+			"id": "pluie",
+			"kicker": "Après la pluie",
+			"title": "Eau très turbide",
+			"summary": "Les retenues arrivent chargées. Le coagulant est trop bas pour cette turbidité, et la filière est poussée au-delà du débit moyen calculé.",
+			"focus": "coagulation",
+			"ambazac": {
+				"turbidityNtu": 120,
+				"ph": 6.6,
+				"temperatureC": 8,
+				"ssMgL": 70,
+				"organic": 45,
+				"microbial": 82,
+				"taste": 34,
+				"color": 42,
+				"debris": 90,
+				"calciumMgL": 10,
+				"alkalinityMgL": 16,
+				"tdsMgL": 90
+			},
+			"vienne": {
+				"turbidityNtu": 55,
+				"ph": 7.2,
+				"temperatureC": 13,
+				"ssMgL": 28,
+				"organic": 48,
+				"microbial": 70,
+				"taste": 38,
+				"color": 32,
+				"debris": 55,
+				"calciumMgL": 24,
+				"alkalinityMgL": 42,
+				"tdsMgL": 180
+			},
+			"initialSettings": {
+				"vienneSharePct": 25,
+				"intakeFlowM3h": 1600,
+				"rawTurbidityAddNtu": 0,
+				"rawTempOffsetC": 0,
+				"rawPhOffset": 0,
+				"rawOrganicAdd": 0,
+				"screenOpenPct": 70,
+				"ferricMgL": 3,
+				"limeCoagMgL": 0,
+				"polyamineMgL": 0.05,
+				"settlingHours": 0.6,
+				"plantFlowM3h": 1600,
+				"sandFlowM3h": 1600,
+				"ozoneMgL": 0.4,
+				"ozoneContactMin": 4,
+				"uvIntensityPct": 40,
+				"lampPct": 50,
+				"reminLimeMgL": 10,
+				"reminCo2MgL": 14,
+				"sodaMgL": 6,
+				"chlorineMgL": 0.4,
+				"demandM3h": 700,
+				"tanksOnline": 2,
+				"preOzone": false,
+				"pacMgL": 0
+			},
+			"initialAccumulators": { "hours": 0, "tankM3": 700, "sandState": 25, "carbonState": 20 },
+			"missions": [
+				{
+					"id": "turb-limit",
+					"label": "Turbidité sous 1,0 malgré la pluie",
+					"basis": "regulatory_reference",
+					"hint": "La dose, le pH, le séjour et le débit doivent jouer ensemble."
+				},
+				{
+					"id": "ph-band",
+					"label": "pH entre 6,5 et 9",
+					"basis": "regulatory_reference",
+					"hint": "Le fer consomme de l’alcalinité : la chaux de coagulation sert à rester dans la fenêtre, la soude règle la fin."
+				},
+				{
+					"id": "microbial",
+					"label": "Risque microbiologique bas",
+					"basis": "educational_assumption",
+					"hint": "Si l’eau reste trouble, les UV perdent beaucoup d’effet."
+				},
+				{
+					"id": "storage",
+					"label": "Cuves assez pleines",
+					"basis": "educational_assumption",
+					"hint": "Baisser le débit de filière pour mieux traiter peut vider les cuves si la demande reste haute."
+				}
+			]
+		},
+		{
+			"id": "organique",
+			"kicker": "Goût et odeur",
+			"title": "Charge organique accrue",
+			"summary": "L’eau n’est pas une crue de turbidité, mais le charbon est largement saturé et la charge organique est haute.",
+			"focus": "carbon",
+			"ambazac": {
+				"turbidityNtu": 12,
+				"ph": 6.9,
+				"temperatureC": 17,
+				"ssMgL": 8,
+				"organic": 76,
+				"microbial": 58,
+				"taste": 74,
+				"color": 68,
+				"debris": 22,
+				"calciumMgL": 11,
+				"alkalinityMgL": 22,
+				"tdsMgL": 110
+			},
+			"vienne": {
+				"turbidityNtu": 20,
+				"ph": 7.3,
+				"temperatureC": 19,
+				"ssMgL": 14,
+				"organic": 82,
+				"microbial": 64,
+				"taste": 80,
+				"color": 70,
+				"debris": 28,
+				"calciumMgL": 26,
+				"alkalinityMgL": 48,
+				"tdsMgL": 200
+			},
+			"initialSettings": {
+				"vienneSharePct": 20,
+				"intakeFlowM3h": 1000,
+				"rawTurbidityAddNtu": 0,
+				"rawTempOffsetC": 0,
+				"rawPhOffset": 0,
+				"rawOrganicAdd": 0,
+				"screenOpenPct": 80,
+				"ferricMgL": 10,
+				"limeCoagMgL": 8,
+				"polyamineMgL": 0.3,
+				"settlingHours": 1.8,
+				"plantFlowM3h": 1000,
+				"sandFlowM3h": 1000,
+				"ozoneMgL": 0.8,
+				"ozoneContactMin": 6,
+				"uvIntensityPct": 55,
+				"lampPct": 70,
+				"reminLimeMgL": 14,
+				"reminCo2MgL": 18,
+				"sodaMgL": 6,
+				"chlorineMgL": 0.45,
+				"demandM3h": 600,
+				"tanksOnline": 2,
+				"preOzone": false,
+				"pacMgL": 0
+			},
+			"initialAccumulators": { "hours": 0, "tankM3": 850, "sandState": 18, "carbonState": 88 },
+			"missions": [
+				{
+					"id": "turb-limit",
+					"label": "Turbidité sous 1,0",
+					"basis": "regulatory_reference",
+					"hint": "Garder la clarification pendant que vous traitez le goût."
+				},
+				{
+					"id": "taste",
+					"label": "Goût et odeur réduits",
+					"basis": "educational_assumption",
+					"hint": "L’état du charbon est le levier principal. Une surcharge plus forte demanderait aussi la pré-ozone ou le charbon en poudre."
+				},
+				{
+					"id": "microbial",
+					"label": "Risque microbiologique bas",
+					"basis": "educational_assumption",
+					"hint": "La charge organique augmente le besoin d’ozone."
+				},
+				{
+					"id": "chlorine-band",
+					"label": "Chlore résiduel dans la bande pédagogique",
+					"basis": "educational_assumption",
+					"hint": "La matière organique consomme du chlore, et le séjour en consomme encore."
+				}
+			]
+		},
+		{
+			"id": "incident",
+			"kicker": "Pollution",
+			"title": "Pollution accidentelle",
+			"summary": "Surcharge organique et risque microbiologique élevés. Le charbon seul ne suffit pas : le rapport mentionne la pré-ozonation ou le charbon actif en poudre pour ce genre de situation.",
+			"focus": "coagulation",
+			"ambazac": {
+				"turbidityNtu": 28,
+				"ph": 6.8,
+				"temperatureC": 12,
+				"ssMgL": 16,
+				"organic": 94,
+				"microbial": 96,
+				"taste": 88,
+				"color": 82,
+				"debris": 48,
+				"calciumMgL": 12,
+				"alkalinityMgL": 20,
+				"tdsMgL": 130
+			},
+			"vienne": {
+				"turbidityNtu": 36,
+				"ph": 7.1,
+				"temperatureC": 15,
+				"ssMgL": 22,
+				"organic": 90,
+				"microbial": 92,
+				"taste": 84,
+				"color": 76,
+				"debris": 42,
+				"calciumMgL": 22,
+				"alkalinityMgL": 38,
+				"tdsMgL": 190
+			},
+			"initialSettings": {
+				"vienneSharePct": 30,
+				"intakeFlowM3h": 1000,
+				"rawTurbidityAddNtu": 0,
+				"rawTempOffsetC": 0,
+				"rawPhOffset": 0,
+				"rawOrganicAdd": 0,
+				"screenOpenPct": 75,
+				"ferricMgL": 12,
+				"limeCoagMgL": 10,
+				"polyamineMgL": 0.35,
+				"settlingHours": 1.8,
+				"plantFlowM3h": 1000,
+				"sandFlowM3h": 1000,
+				"ozoneMgL": 0.3,
+				"ozoneContactMin": 4,
+				"uvIntensityPct": 25,
+				"lampPct": 30,
+				"reminLimeMgL": 12,
+				"reminCo2MgL": 16,
+				"sodaMgL": 5,
+				"chlorineMgL": 0.35,
+				"demandM3h": 550,
+				"tanksOnline": 2,
+				"preOzone": false,
+				"pacMgL": 0
+			},
+			"initialAccumulators": { "hours": 0, "tankM3": 800, "sandState": 20, "carbonState": 78 },
+			"missions": [
+				{
+					"id": "turb-limit",
+					"label": "Turbidité sous 1,0",
+					"basis": "regulatory_reference",
+					"hint": "Le charbon en poudre ajoute des matières : il faut encore les floculer et les déposer."
+				},
+				{
+					"id": "taste",
+					"label": "Goût ramené sous l’objectif",
+					"basis": "educational_assumption",
+					"hint": "Charbon saturé seul : l’indice reste haut. Pré-ozone ou charbon en poudre, puis charbon frais."
+				},
+				{
+					"id": "microbial",
+					"label": "Risque microbiologique bas",
+					"basis": "educational_assumption",
+					"hint": "Ozone, UV et eau peu trouble. Les UV sur une eau encore chargée ne rattrapent pas tout."
+				},
+				{
+					"id": "ph-band",
+					"label": "pH entre 6,5 et 9",
+					"basis": "regulatory_reference",
+					"hint": "Garder la reminéralisation et la soude distinctes."
+				}
+			]
+		}
+	]
+}
