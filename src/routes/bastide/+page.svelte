@@ -119,6 +119,7 @@
 				<a href="/">Rivière Blanche</a>
 				<a href="/desinfection">Désinfection</a>
 				<a href="/laboratoire">Laboratoire</a>
+				<a href="/info-agricole/">Information agricole</a>
 			</p>
 		</div>
 		<nav class="scenarios" aria-label="Scénarios d’eau brute">

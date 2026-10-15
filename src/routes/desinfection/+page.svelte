@@ -195,6 +195,7 @@
 				<a href="/">Rivière Blanche</a>
 				<a href="/bastide">La Bastide</a>
 				<a href="/laboratoire">Laboratoire</a>
+				<a href="/info-agricole/">Information agricole</a>
 			</p>
 		</div>
 		<nav class="scenarios" aria-label="Ateliers">
