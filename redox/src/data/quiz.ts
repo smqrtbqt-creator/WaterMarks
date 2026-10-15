@@ -1,0 +1,126 @@
+import type { McqItem } from '../types/redox'
+
+export const QUIZ: McqItem[] = [
+  {
+    id: 'q1',
+    kind: 'quiz',
+    title: 'Question 1',
+    prompt: 'Le zinc devient Zn²⁺ en libérant deux électrons. Quel est son rôle ?',
+    choices: [
+      { id: 'ox', label: 'Oxydant' },
+      { id: 'red', label: 'Réducteur' },
+    ],
+    answerId: 'red',
+    why: 'Il libère des électrons : c’est le réducteur, et il s’oxyde.',
+  },
+  {
+    id: 'q2',
+    kind: 'quiz',
+    title: 'Question 2',
+    prompt: 'L’ion argent Ag⁺ capte un électron pour devenir Ag. Quel est son rôle ?',
+    choices: [
+      { id: 'ox', label: 'Oxydant' },
+      { id: 'red', label: 'Réducteur' },
+    ],
+    answerId: 'ox',
+    why: 'Il capte un électron : c’est l’oxydant, et il se réduit.',
+  },
+  {
+    id: 'q3',
+    kind: 'quiz',
+    title: 'Question 3',
+    prompt: 'Dans Fe + Cu²⁺ → Fe²⁺ + Cu, quelle espèce s’oxyde ?',
+    formula: 'Fe + Cu²⁺ → Fe²⁺ + Cu',
+    choices: [
+      { id: 'fe', label: 'Fe' },
+      { id: 'cu', label: 'Cu²⁺' },
+    ],
+    answerId: 'fe',
+    why: 'Fe devient Fe²⁺. Il a perdu des électrons, donc il s’oxyde.',
+  },
+  {
+    id: 'q4',
+    kind: 'quiz',
+    title: 'Question 4',
+    prompt: 'Dans Fe + Cu²⁺ → Fe²⁺ + Cu, quelle espèce est l’oxydant ?',
+    formula: 'Fe + Cu²⁺ → Fe²⁺ + Cu',
+    choices: [
+      { id: 'fe', label: 'Fe' },
+      { id: 'cu', label: 'Cu²⁺' },
+    ],
+    answerId: 'cu',
+    why: 'Cu²⁺ capte les électrons du fer. L’espèce qui capte les électrons est l’oxydant.',
+  },
+  {
+    id: 'q5',
+    kind: 'quiz',
+    title: 'Question 5',
+    prompt: 'Une oxydation correspond à :',
+    choices: [
+      { id: 'perte', label: 'une perte d’électrons' },
+      { id: 'gain', label: 'un gain d’électrons' },
+    ],
+    answerId: 'perte',
+    why: 'Oxydation = perte d’électrons.',
+  },
+  {
+    id: 'q6',
+    kind: 'quiz',
+    title: 'Question 6',
+    prompt: 'Une réduction correspond à :',
+    choices: [
+      { id: 'perte', label: 'une perte d’électrons' },
+      { id: 'gain', label: 'un gain d’électrons' },
+    ],
+    answerId: 'gain',
+    why: 'Réduction = gain d’électrons.',
+  },
+  {
+    id: 'q7',
+    kind: 'quiz',
+    title: 'Question 7',
+    prompt: 'Le réducteur :',
+    choices: [
+      { id: 'donne', label: 'donne des électrons' },
+      { id: 'capte', label: 'capte des électrons' },
+    ],
+    answerId: 'donne',
+    why: 'Le réducteur cède ses électrons, et il s’oxyde.',
+  },
+  {
+    id: 'q8',
+    kind: 'quiz',
+    title: 'Question 8',
+    prompt: 'L’oxydant :',
+    choices: [
+      { id: 'donne', label: 'donne des électrons' },
+      { id: 'capte', label: 'capte des électrons' },
+    ],
+    answerId: 'capte',
+    why: 'L’oxydant capte les électrons, et il se réduit.',
+  },
+  {
+    id: 'q9',
+    kind: 'quiz',
+    title: 'Question 9',
+    prompt: 'Lorsqu’une espèce capte des électrons, elle :',
+    choices: [
+      { id: 'oxy', label: 's’oxyde' },
+      { id: 'red', label: 'se réduit' },
+    ],
+    answerId: 'red',
+    why: 'Capter des électrons, c’est en gagner. L’espèce se réduit.',
+  },
+  {
+    id: 'q10',
+    kind: 'quiz',
+    title: 'Question 10',
+    prompt: 'Lorsqu’une espèce donne des électrons, elle :',
+    choices: [
+      { id: 'oxy', label: 's’oxyde' },
+      { id: 'red', label: 'se réduit' },
+    ],
+    answerId: 'oxy',
+    why: 'Donner des électrons, c’est en perdre. L’espèce s’oxyde.',
+  },
+]

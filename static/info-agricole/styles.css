@@ -155,10 +155,20 @@ input[type="text"], textarea {
 
 textarea { min-height: 7rem; }
 
+.card, .banner, .feedback, .teacher, pre, a {
+  overflow-wrap: anywhere;
+}
+
+pre {
+  white-space: pre-wrap;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
   background: white;
+  display: block;
+  overflow-x: auto;
 }
 
 th, td {

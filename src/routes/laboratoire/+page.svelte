@@ -74,6 +74,7 @@
 				<a href="/bastide">La Bastide</a>
 				<a href="/desinfection">Désinfection</a>
 				<a href="/info-agricole/">Information agricole</a>
+				<a href="/redox/">Redox</a>
 			</p>
 		</div>
 		<div class="lab-actions">

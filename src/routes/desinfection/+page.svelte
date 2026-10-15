@@ -196,6 +196,7 @@
 				<a href="/bastide">La Bastide</a>
 				<a href="/laboratoire">Laboratoire</a>
 				<a href="/info-agricole/">Information agricole</a>
+				<a href="/redox/">Redox</a>
 			</p>
 		</div>
 		<nav class="scenarios" aria-label="Ateliers">
