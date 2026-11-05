@@ -1,5 +1,6 @@
 <script lang="ts">
 	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
+	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Inspector from '$lib/components/Inspector.svelte';
 	import PlantSchematic from '$lib/components/PlantSchematic.svelte';
 	import Trials from '$lib/components/Trials.svelte';
@@ -174,17 +175,7 @@
 		<div class="brand">
 			<p class="mark">Station d’eau potable</p>
 			<h1>Rivière Blanche</h1>
-			<p class="plant-switch">
-				<a href="/bastide">La Bastide, Limoges</a>
-				<a href="/desinfection">Désinfection</a>
-				<a href="/laboratoire">Laboratoire</a>
-				<a href="/info-agricole/">Information agricole</a>
-				<a href="/redox/">Redox</a>
-				<a href="/alcalinite/">Alcalinité</a>
-				<a href="/alcalinite/equilibre">Filière forage</a>
-				<a href="/liens">Liens</a>
-				<a href="/documents-tp">Documents de TP</a>
-			</p>
+			<ProjectSwitch current="home" />
 		</div>
 		<nav class="scenarios" aria-label="Scénarios">
 			{#each scenarios as item (item.id)}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Charts from '$lib/components/bastide/Charts.svelte';
+	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Compare from '$lib/components/bastide/Compare.svelte';
 	import Panel from '$lib/components/bastide/Panel.svelte';
 	import Synoptic from '$lib/components/bastide/Synoptic.svelte';
@@ -115,17 +116,7 @@
 		<div class="brand">
 			<p class="mark">Limoges · modèle éducatif</p>
 			<h1>La Bastide</h1>
-			<p class="plant-switch">
-				<a href="/">Rivière Blanche</a>
-				<a href="/desinfection">Désinfection</a>
-				<a href="/laboratoire">Laboratoire</a>
-				<a href="/info-agricole/">Information agricole</a>
-				<a href="/redox/">Redox</a>
-				<a href="/alcalinite/">Alcalinité</a>
-				<a href="/alcalinite/equilibre">Filière forage</a>
-				<a href="/liens">Liens</a>
-				<a href="/documents-tp">Documents de TP</a>
-			</p>
+			<ProjectSwitch current="bastide" />
 		</div>
 		<nav class="scenarios" aria-label="Scénarios d’eau brute">
 			{#each scenarios as item (item.id)}

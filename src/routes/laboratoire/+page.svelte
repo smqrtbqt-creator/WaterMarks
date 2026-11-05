@@ -3,6 +3,7 @@
 	import Analysis from '$lib/components/simulator/Analysis.svelte';
 	import Diagnosis from '$lib/components/simulator/Diagnosis.svelte';
 	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
+	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Outcome from '$lib/components/simulator/Outcome.svelte';
 	import Plant from '$lib/components/simulator/Plant.svelte';
 	import { makeToast, type Toast } from '$lib/feedback';
@@ -85,17 +86,7 @@
 		<div class="brand">
 			<p class="mark">BTSA GEMEAU · atelier</p>
 			<h1>Laboratoire</h1>
-			<p class="plant-switch">
-				<a href="/">Rivière Blanche</a>
-				<a href="/bastide">La Bastide</a>
-				<a href="/desinfection">Désinfection</a>
-				<a href="/info-agricole/">Information agricole</a>
-				<a href="/redox/">Redox</a>
-				<a href="/alcalinite/">Alcalinité</a>
-				<a href="/alcalinite/equilibre">Filière forage</a>
-				<a href="/liens">Liens</a>
-				<a href="/documents-tp">Documents de TP</a>
-			</p>
+			<ProjectSwitch current="laboratoire" />
 		</div>
 		<div class="lab-actions">
 			<button type="button" class="primary" onclick={launch}>{playing ? 'Relancer' : 'Lancer la simulation'}</button>

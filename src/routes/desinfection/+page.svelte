@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Curves from '$lib/components/disinfection/Curves.svelte';
+	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Station from '$lib/components/disinfection/Station.svelte';
 	import Slider from '$lib/components/Slider.svelte';
 	import { LEGIONELLA, MODEL_LIMITS, ORGANISMS, PROCESSES, REFERENCES } from '$lib/disinfection/content';
@@ -191,17 +192,7 @@
 		<div class="brand">
 			<p class="mark">Niveau 1 · simulation</p>
 			<h1>Désinfection</h1>
-			<p class="plant-switch">
-				<a href="/">Rivière Blanche</a>
-				<a href="/bastide">La Bastide</a>
-				<a href="/laboratoire">Laboratoire</a>
-				<a href="/info-agricole/">Information agricole</a>
-				<a href="/redox/">Redox</a>
-				<a href="/alcalinite/">Alcalinité</a>
-				<a href="/alcalinite/equilibre">Filière forage</a>
-				<a href="/liens">Liens</a>
-				<a href="/documents-tp">Documents de TP</a>
-			</p>
+			<ProjectSwitch current="desinfection" />
 		</div>
 		<nav class="scenarios" aria-label="Ateliers">
 			{#each ATELIERS as item (item.id)}
