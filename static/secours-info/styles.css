@@ -1,0 +1,94 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --paper: #fffdf8;
+  --ink: #1d2430;
+  --muted: #3e4a5c;
+  --line: #d5d0c6;
+  --green: #1d5c45;
+  --vital: #f8e4e2;
+  --shadow: 0 10px 28px rgba(40, 32, 18, 0.06);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", Candara, sans-serif;
+  line-height: 1.45;
+}
+
+.app {
+  width: min(1100px, calc(100% - 1.5rem));
+  margin: 0 auto;
+  padding: 1.2rem 0 3rem;
+}
+
+h1, h2 { font-family: Georgia, "Times New Roman", serif; line-height: 1.2; }
+h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin: 0.2rem 0 0.4rem; }
+h2 { font-size: 1.35rem; margin: 0 0 0.6rem; }
+
+section, .safety {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  margin: 0.8rem 0;
+  box-shadow: var(--shadow);
+}
+
+.kicker, .audience, .note, .nav { color: var(--muted); }
+.kicker { margin: 0; letter-spacing: 0.04em; text-transform: uppercase; font-size: 0.78rem; }
+.audience { margin: 0 0 0.6rem; }
+.nav { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+a { color: var(--green); }
+
+.safety { background: #f8efe4; }
+
+.retain {
+  border-left: 4px solid var(--green);
+  padding-left: 0.8rem;
+}
+
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+caption { caption-side: bottom; text-align: left; color: var(--muted); font-size: 0.85rem; padding-top: 0.4rem; }
+th, td { border: 1px solid var(--line); padding: 0.45rem 0.5rem; vertical-align: top; text-align: left; }
+thead th { background: #e7f0ea; }
+.crit { text-align: center; }
+tr.vital { background: var(--vital); }
+
+.sources { display: grid; gap: 0.7rem; padding-left: 1.2rem; }
+.sources li { padding-left: 0.2rem; }
+.sources a { font-weight: 650; }
+
+label { display: block; margin: 0.8rem 0 0.3rem; font-weight: 650; }
+textarea, input, select, button { font: inherit; color: inherit; }
+textarea, input[type="text"], select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.45rem 0.55rem;
+  background: #fff;
+}
+td input, td select, td textarea { min-width: 8rem; }
+td textarea { min-height: 4.2rem; }
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  background: var(--green);
+  color: white;
+  cursor: pointer;
+}
+button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.actions .note { flex-basis: 100%; }
+
+@media (max-width: 720px) {
+  table { min-width: 720px; }
+}

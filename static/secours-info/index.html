@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fiabilité des informations — premiers secours</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <p class="kicker">Seconde SAPAT · TIM</p>
+      <h1>Fiabilité des informations sur les premiers secours</h1>
+      <p class="audience">Examiner une information précise. Le nom du site ne suffit pas à la juger.</p>
+      <p class="nav">
+        <a href="../documents-tp">Documents de TP</a>
+        <a href="../">Rivière Blanche</a>
+      </p>
+    </header>
+
+    <aside class="safety">
+      <p>Ce TP porte sur la recherche et l’évaluation de l’information. Pour un geste vital, suivez les recommandations à jour des services d’urgence ou d’un organisme compétent. Cette page ne remplace pas une formation pratique aux premiers secours, et elle n’enseigne aucun geste.</p>
+    </aside>
+
+    <section>
+      <h2>Étape 1 — Dossier sur votre ordinateur</h2>
+      <ol>
+        <li>Ouvrez le dossier Documents.</li>
+        <li>Créez un dossier nommé <strong>TP INFO</strong>.</li>
+        <li>Ouvrez LibreOffice Writer.</li>
+        <li>Créez un document nommé <strong>Fiabilite_premiers_secours</strong>.</li>
+        <li>Enregistrez-le dans Documents/TP INFO.</li>
+      </ol>
+      <p>Cette page ne crée pas ce dossier. Elle sert à chercher, classer, puis exporter un texte à coller dans Writer.</p>
+    </section>
+
+    <section>
+      <h2>Étape 2 — Tableau des conséquences</h2>
+      <p>À reproduire dans Writer : première ligne en gras avec un fond coloré, ligne « Urgence vitale » en rouge clair, colonne Criticité centrée, largeur des colonnes ajustée, un titre au-dessus.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Pourquoi une erreur n’a pas toujours les mêmes conséquences</caption>
+          <thead>
+            <tr>
+              <th>Type d’information</th>
+              <th>Exemple</th>
+              <th>Conséquence possible d’une erreur</th>
+              <th>Criticité</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Information générale</td>
+              <td>Définition des premiers secours</td>
+              <td>Mauvaise compréhension</td>
+              <td class="crit">Faible</td>
+            </tr>
+            <tr>
+              <td>Prévention</td>
+              <td>Éviter un accident domestique</td>
+              <td>Risque d’accident</td>
+              <td class="crit">Modérée</td>
+            </tr>
+            <tr>
+              <td>Conseil de santé</td>
+              <td>Réagir face à une brûlure</td>
+              <td>Aggravation de la blessure</td>
+              <td class="crit">Élevée</td>
+            </tr>
+            <tr>
+              <td>Geste de secours</td>
+              <td>Réagir face à une personne inconsciente</td>
+              <td>Retard de prise en charge</td>
+              <td class="crit">Très élevée</td>
+            </tr>
+            <tr class="vital">
+              <td>Urgence vitale</td>
+              <td>Réagir face à un arrêt cardiaque</td>
+              <td>Décès ou séquelles graves</td>
+              <td class="crit">Critique</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="retain">Plus les conséquences possibles d’une erreur sont graves, plus il faut vérifier l’information avant de l’utiliser.</p>
+    </section>
+
+    <section>
+      <h2>Étape 3 — Dix sources à ouvrir</h2>
+      <p>Ces sites proposent des informations de nature et de qualité différentes. Vous examinez l’information précise, pas le nom du site.</p>
+      <p class="note" id="link-note"></p>
+      <ol class="sources" id="sources"></ol>
+      <p class="retain">Un forum ou une vidéo personnelle n’est pas automatiquement faux. Inversement, un média connu n’est pas automatiquement fiable pour chaque conseil médical. Il faut examiner l’auteur, la date, les références et la cohérence de l’information.</p>
+    </section>
+
+    <section>
+      <h2>Étape 4 — Classer au moins cinq informations</h2>
+      <p>Pour la criticité : Faible, conséquence limitée. Modérée, gêne ou erreur sans conséquence grave attendue. Élevée, risque de blessure ou d’aggravation. Critique, risque vital ou conséquences graves et irréversibles.</p>
+      <div class="table-wrap">
+        <table id="findings">
+          <caption>Informations trouvées</caption>
+          <thead>
+            <tr>
+              <th>Site consulté</th>
+              <th>Information trouvée</th>
+              <th>Type</th>
+              <th>Conséquence possible d’une erreur</th>
+              <th>Criticité</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p><button type="button" id="add-row">Ajouter une ligne</button> <span id="row-count"></span></p>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+      <label for="conclusion">Pourquoi ne doit-on pas accorder le même niveau de confiance à toutes les informations trouvées sur Internet ? Trois à cinq lignes.</label>
+      <textarea id="conclusion" rows="6"></textarea>
+    </section>
+
+    <section>
+      <h2>Activité complémentaire — enquête</h2>
+      <p>Choisissez une affirmation sur les premiers secours, retrouvez-la sur deux sites, comparez l’auteur, la date et les références, puis dites si les deux sites donnent la même information.</p>
+      <label for="claim">Affirmation à vérifier</label>
+      <textarea id="claim" rows="3"></textarea>
+      <div class="table-wrap">
+        <table>
+          <caption>Comparaison de deux sources</caption>
+          <thead>
+            <tr>
+              <th>Critère</th>
+              <th>Site 1</th>
+              <th>Site 2</th>
+            </tr>
+          </thead>
+          <tbody id="compare"></tbody>
+        </table>
+      </div>
+      <label for="verdict">Verdict</label>
+      <select id="verdict">
+        <option value="">À choisir après la comparaison</option>
+        <option>Information vérifiée</option>
+        <option>Information incertaine</option>
+        <option>Information à ne pas diffuser sans vérification supplémentaire</option>
+      </select>
+      <label for="known">Un site connu est-il nécessairement fiable pour toutes les informations qu’il publie ? Justifiez.</label>
+      <textarea id="known" rows="5"></textarea>
+    </section>
+
+    <section class="actions">
+      <button type="button" id="export">Exporter pour Writer</button>
+      <button type="button" id="print">Imprimer</button>
+      <button type="button" class="ghost" id="reset">Effacer mes réponses</button>
+      <p class="note">Les réponses restent dans ce navigateur, sans nom. L’export est un fichier texte à coller dans Writer.</p>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

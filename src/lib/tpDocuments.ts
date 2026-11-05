@@ -11,6 +11,17 @@ export type TpDocument = {
 
 export const tpDocuments: TpDocument[] = [
 	{
+		title: 'Seconde SAPAT — fiabilité des informations, premiers secours',
+		detail:
+			'Page du TP : dix sources à examiner sans les classer d’après leur nom, tableau des conséquences, export pour Writer.',
+		href: '/secours-info/'
+	},
+	{
+		title: 'Fiche PDF — fiabilité des informations, premiers secours',
+		detail: 'Sujet d’origine du TP Seconde SAPAT, à lire à côté de la page interactive.',
+		href: '/documents-tp/TP_fiabilite_premiers_secours.pdf'
+	},
+	{
 		title: 'BTSA GEMEAU — pH de la Gartempe, Calc',
 		detail: 'Exploiter les mesures réelles de pH dans LibreOffice Calc. Fiche PDF.',
 		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige-3.pdf'

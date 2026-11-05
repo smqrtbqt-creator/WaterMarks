@@ -13,6 +13,7 @@
 		{ id: 'alcalinite', href: `${base}/alcalinite/`, label: 'Alcalinité' },
 		{ id: 'forage', href: `${base}/alcalinite/equilibre`, label: 'Filière forage' },
 		{ id: 'liens', href: `${base}/liens`, label: 'Liens' },
+		{ id: 'secours', href: `${base}/secours-info/`, label: 'Premiers secours' },
 		{ id: 'tp', href: `${base}/documents-tp`, label: 'Documents de TP' }
 	];
 </script>
