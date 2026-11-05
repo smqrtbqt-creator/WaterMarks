@@ -2,14 +2,20 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Handle } from '@sveltejs/kit';
 
-const indexFiles = [
+const redoxIndexFiles = [
 	join(process.cwd(), 'static', 'redox', 'index.html'),
 	join(process.cwd(), 'build', 'client', 'redox', 'index.html'),
 	join(process.cwd(), 'client', 'redox', 'index.html')
 ];
 
-async function redoxPage() {
-	for (const file of indexFiles) {
+const alcaliniteIndexFiles = [
+	join(process.cwd(), 'static', 'alcalinite', 'index.html'),
+	join(process.cwd(), 'build', 'client', 'alcalinite', 'index.html'),
+	join(process.cwd(), 'client', 'alcalinite', 'index.html')
+];
+
+async function readFirst(files: string[]) {
+	for (const file of files) {
 		try {
 			return await readFile(file);
 		} catch {
@@ -19,18 +25,29 @@ async function redoxPage() {
 	return null;
 }
 
-/** /redox/quiz n’a pas de fichier : on renvoie la page du jeu. Les fichiers réels restent servis tels quels. */
+/** SPA React sous /redox/ et /alcalinite/ : routes clientes renvoient l’index. */
 export const handle: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
-	const inGame = path === '/redox' || path.startsWith('/redox/');
 	const asset = /\.[a-z0-9]+$/i.test(path);
-	if (inGame && !asset) {
-		const html = await redoxPage();
-		if (html) {
-			return new Response(html, {
-				headers: { 'content-type': 'text/html; charset=utf-8' }
-			});
+
+	if (!asset) {
+		if (path === '/redox' || path.startsWith('/redox/')) {
+			const html = await readFirst(redoxIndexFiles);
+			if (html) {
+				return new Response(html, {
+					headers: { 'content-type': 'text/html; charset=utf-8' }
+				});
+			}
+		}
+		if (path === '/alcalinite' || path.startsWith('/alcalinite/')) {
+			const html = await readFirst(alcaliniteIndexFiles);
+			if (html) {
+				return new Response(html, {
+					headers: { 'content-type': 'text/html; charset=utf-8' }
+				});
+			}
 		}
 	}
+
 	return resolve(event);
 };

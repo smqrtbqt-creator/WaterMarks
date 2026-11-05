@@ -8,8 +8,13 @@
   const sourcesLogic = data.sourcesLogic;
   const conclusion = data.conclusion;
   const chart = data.chart;
+  const graph = data.graph;
+  const map = data.map;
   const app = document.querySelector('#app');
   const storageKey = 'info-agricole-lab-v1';
+  let past = [];
+  let future = [];
+  let drag = null;
 
   const missions = [
     ['A', 'Hypothèse'],
@@ -17,6 +22,7 @@
     ['C', 'Données'],
     ['D', 'Preuves'],
     ['E', 'Conclusion'],
+    ['F', 'Carte'],
   ];
 
   const empty = () => ({
@@ -31,6 +37,12 @@
     pairs: {},
     rule: '',
     final: { choice: '', ticks: [], text: '' },
+    graph: null,
+    view: { x: 40, y: 40, scale: 1 },
+    selected: '',
+    query: '',
+    relationError: '',
+    importError: '',
   });
 
   let state = load();
@@ -38,14 +50,35 @@
   function load() {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-      if (!saved || typeof saved !== 'object') return empty();
-      return Object.assign(empty(), saved, {
+      if (!saved || typeof saved !== 'object') {
+        const fresh = empty();
+        fresh.graph = graph.seed(claim.statement, catalog.sources);
+        return fresh;
+      }
+      const base = Object.assign(empty(), saved, {
         calc: Object.assign(empty().calc, saved.calc || {}),
         final: Object.assign(empty().final, saved.final || {}),
+        view: Object.assign(empty().view, saved.view || {}),
       });
+      base.graph = restoreGraph(saved.graph);
+      return base;
     } catch (error) {
-      return empty();
+      const fresh = empty();
+      fresh.graph = graph.seed(claim.statement, catalog.sources);
+      return fresh;
     }
+  }
+
+  function restoreGraph(raw) {
+    if (!raw) return graph.seed(claim.statement, catalog.sources);
+    const result = graph.importInvestigation(raw);
+    return result.ok ? result.graph : graph.seed(claim.statement, catalog.sources);
+  }
+
+  function remember() {
+    past.push(graph.exportInvestigation(state.graph));
+    if (past.length > 40) past.shift();
+    future = [];
   }
 
   function save() {
@@ -88,7 +121,11 @@
   }
 
   function readyOf(id) {
-    return { A: readyA, B: readyB, C: readyC, D: readyD, E: readyE }[id]();
+    return { A: readyA, B: readyB, C: readyC, D: readyD, E: readyE, F: readyF }[id]();
+  }
+
+  function readyF() {
+    return !!(state.graph && String(state.graph.conclusion.text || '').trim().length >= 20);
   }
 
   function fmt(value, digits) {
@@ -97,6 +134,12 @@
 
   app.addEventListener('click', (event) => {
     const target = event.target.closest('[data-action]');
+    const nodeEl = event.target.closest('[data-node]');
+    if (nodeEl && !target) {
+      state.selected = nodeEl.dataset.node;
+      render();
+      return;
+    }
     if (!target) return;
     const action = target.dataset.action;
     if (action === 'go') state.mission = target.dataset.mission;
@@ -105,11 +148,63 @@
     if (action === 'reset') {
       localStorage.removeItem(storageKey);
       state = empty();
+      state.graph = graph.seed(claim.statement, catalog.sources);
+      past = [];
+      future = [];
     }
     if (action === 'export') download(studentText(), 'synthese-eleve.txt');
     if (action === 'export-teacher') download(teacherText(), 'lecture-enseignant.txt');
     if (action === 'open-fiche') state.openFiche = target.dataset.source;
     if (action === 'check') state.mission = state.mission;
+    if (action === 'undo' && past.length) {
+      future.push(graph.exportInvestigation(state.graph));
+      state.graph = past.pop();
+    }
+    if (action === 'redo' && future.length) {
+      past.push(graph.exportInvestigation(state.graph));
+      state.graph = future.pop();
+    }
+    if (action === 'zoom-in') state.view.scale = Math.min(2, +(state.view.scale + 0.1).toFixed(2));
+    if (action === 'zoom-out') state.view.scale = Math.max(0.35, +(state.view.scale - 0.1).toFixed(2));
+    if (action === 'fit') state.view = graph.fitView(state.graph, 960, 640);
+    if (action === 'add-node') {
+      const id = 'n-' + Math.random().toString(36).slice(2, 10);
+      const created = graph.addNode(state.graph, { id, type: target.dataset.type, x: 140, y: 120, title: 'Nouveau : ' + target.dataset.type });
+      if (created.ok) {
+        remember();
+        state.graph = created.graph;
+        state.selected = id;
+      }
+    }
+    if (action === 'delete-node' && state.selected) {
+      remember();
+      state.graph = graph.removeNode(state.graph, state.selected).graph;
+      state.selected = '';
+    }
+    if (action === 'delete-relation') {
+      remember();
+      state.graph = graph.removeRelation(state.graph, target.dataset.relation).graph;
+    }
+    if (action === 'add-relation') {
+      const created = graph.addRelation(state.graph, {
+        from: valueOf('#rel-from'),
+        to: valueOf('#rel-to'),
+        type: valueOf('#rel-type'),
+        justification: valueOf('#rel-why'),
+        independence: valueOf('#rel-indep') || 'inconnue',
+      });
+      state.relationError = created.ok ? '' : created.errors.join(' ');
+      if (created.ok) {
+        remember();
+        state.graph = created.graph;
+      }
+    }
+    if (action === 'add-extras') {
+      remember();
+      state.graph = graph.addSourceNodes(state.graph, catalog.extras);
+    }
+    if (action === 'export-json') download(JSON.stringify(graph.exportInvestigation(state.graph), null, 2), 'investigation.json', 'application/json');
+    if (action === 'print') window.print();
     render();
   });
 
@@ -133,6 +228,11 @@
       state.final.ticks = [...ticks];
     }
     if (input.name === 'interpretation') state.calc.interpretation = input.value;
+    if (input.dataset.nodeField) {
+      state.graph = graph.updateNode(state.graph, input.dataset.nodeId, fieldPatch(input)).graph;
+    }
+    if (input.name === 'invest-status') state.graph.conclusion.status = input.value;
+    if (input.dataset.import != null) readImport(input.files && input.files[0]);
     render();
   });
 
@@ -146,7 +246,69 @@
       state.final.text = input.value;
       save();
     }
+    if (input.dataset.nodeField) {
+      state.graph = graph.updateNode(state.graph, input.dataset.nodeId, fieldPatch(input)).graph;
+      save();
+      refreshAlerts();
+    }
+    if (input.hasAttribute('data-graph-query')) {
+      state.query = input.value;
+      save();
+      const host = app.querySelector('.graph-host');
+      if (host) host.innerHTML = map.mapMarkup(state.graph, state.view, state.selected, state.query);
+    }
+    if (input.dataset.invest) {
+      state.graph.conclusion[input.dataset.invest] = input.value;
+      save();
+    }
   });
+
+  function valueOf(selector) {
+    const el = app.querySelector(selector);
+    return el ? el.value : '';
+  }
+
+  function fieldPatch(input) {
+    return { [input.dataset.nodeField]: input.value };
+  }
+
+  function alertsHtml() {
+    const list = graph.alerts(state.graph);
+    if (!list.length) return '<p>Aucune alerte pour le moment. Cela ne veut pas dire que l’affirmation est vraie.</p>';
+    return '<ul>' + list.map((item) => '<li>' + esc(item.text) + '</li>').join('') + '</ul>';
+  }
+
+  function refreshAlerts() {
+    const box = app.querySelector('#alerts');
+    if (box) box.innerHTML = alertsHtml();
+  }
+
+  function readImport(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      let data = null;
+      try {
+        data = JSON.parse(String(reader.result || ''));
+      } catch (error) {
+        state.importError = 'Ce fichier n’est pas du JSON.';
+        render();
+        return;
+      }
+      const result = graph.importInvestigation(data);
+      if (!result.ok) {
+        state.importError = result.errors.join(' ');
+        render();
+        return;
+      }
+      remember();
+      state.graph = result.graph;
+      state.importError = '';
+      state.selected = '';
+      render();
+    };
+    reader.readAsText(file);
+  }
 
   function render() {
     save();
@@ -159,6 +321,7 @@
       state.mission === 'C' ? missionC() : '',
       state.mission === 'D' ? missionD() : '',
       state.mission === 'E' ? missionE() : '',
+      state.mission === 'F' ? missionF() : '',
       state.teacher ? teacherPanel() : '',
       footer(),
     ].join('');
@@ -405,6 +568,115 @@
     );
   }
 
+  function missionF() {
+    const selected = graph.nodeById(state.graph, state.selected);
+    const types = data.graphSchema.nodeTypes.map((item) => (
+      '<button class="btn" type="button" data-action="add-node" data-type="' + esc(item.id) + '">Ajouter : ' + esc(item.label) + '</button>'
+    )).join('');
+    const panel = selected ? nodePanel(selected) : '<p>Sélectionnez un nœud, ou ajoutez-en un. Tabulation, flèches, Entrée, Suppr et Échap fonctionnent sur la carte.</p>';
+    const relations = state.graph.relations.map((relation) => {
+      const from = graph.nodeById(state.graph, relation.from);
+      const to = graph.nodeById(state.graph, relation.to);
+      const rule = data.graphSchema.relationTypes.find((item) => item.id === relation.type);
+      return '<li>' + esc((from && from.title) || relation.from) + ' — ' + esc(rule ? rule.label : relation.type) + ' — ' + esc((to && to.title) || relation.to) +
+        ' <button class="btn ghost" type="button" data-action="delete-relation" data-relation="' + esc(relation.id) + '">Retirer le lien</button></li>';
+    }).join('');
+    return (
+      '<section><section class="card"><h2>Carte de l’investigation</h2>' +
+      '<p>Les dix sources du TP sont placées avec leur adresse. L’auteur et la date restent vides tant que vous ne les avez pas lus. Aucun site ne reçoit de note de fiabilité. Les liens « maintenance » et « erreur » décrivent l’ouverture du 15 octobre 2026, pas la vérité du contenu.</p>' +
+      '<div class="row no-print">' + types +
+      '<button class="btn" type="button" data-action="add-extras">Ajouter SDES et Insee</button>' +
+      '<button class="btn" type="button" data-action="zoom-in">Zoom +</button>' +
+      '<button class="btn" type="button" data-action="zoom-out">Zoom −</button>' +
+      '<button class="btn" type="button" data-action="fit">Ajuster</button>' +
+      '<button class="btn" type="button" data-action="undo">Annuler</button>' +
+      '<button class="btn" type="button" data-action="redo">Rétablir</button></div>' +
+      '<label class="field">Rechercher<input type="search" data-graph-query value="' + esc(state.query) + '"></label></section>' +
+      '<div class="workspace"><div class="graph-host">' + map.mapMarkup(state.graph, state.view, state.selected, state.query) + '</div>' +
+      '<aside class="card side-panel"><h2>Propriétés</h2>' + panel + relationForm(selected) +
+      (state.relationError ? '<p class="feedback warn">' + esc(state.relationError) + '</p>' : '') +
+      '<h3>Liens</h3><ul>' + (relations || '<li>Aucun lien pour l’instant.</li>') + '</ul></aside></div>' +
+      '<section class="card alerts" id="alerts"><h2>Alertes pédagogiques</h2>' + alertsHtml() + '</section>' +
+      conclusionForm() + nav('F') + '</section>'
+    );
+  }
+
+  function nodePanel(node) {
+    const status = data.graphSchema.statuses.map((item) => (
+      '<option value="' + esc(item.id) + '"' + (node.status === item.id ? ' selected' : '') + '>' + esc(item.label) + '</option>'
+    )).join('');
+    const field = (key, label, value) => (
+      '<label class="field">' + esc(label) + '<input data-node-field="' + key + '" data-node-id="' + esc(node.id) + '" value="' + esc(value || '') + '"></label>'
+    );
+    const area = (key, label, value) => (
+      '<label class="field">' + esc(label) + '<textarea data-node-field="' + key + '" data-node-id="' + esc(node.id) + '">' + esc(value || '') + '</textarea></label>'
+    );
+    let body = field('title', 'Titre', node.title);
+    if (node.type === 'source') {
+      body += field('url', 'URL', node.url) + field('author', 'Auteur ou organisme', node.author) + field('date', 'Date', node.date) +
+        field('method', 'Méthode', node.method) + field('interest', 'Intérêt visible', node.interest) +
+        field('documentId', 'Identifiant de document, s’il est le même qu’une autre page', node.documentId) +
+        '<p class="small">État du lien constaté le 15 octobre 2026 : ' + esc(node.linkStatus || 'non renseigné') + '. Ce n’est pas une note de fiabilité.</p>';
+    }
+    if (node.type === 'affirmation') {
+      body += area('text', 'Phrase exacte', node.text) + area('context', 'Contexte', node.context) + field('unit', 'Unité', node.unit) +
+        '<label class="field">Statut<select data-node-field="status" data-node-id="' + esc(node.id) + '">' + status + '</select></label>';
+    }
+    if (node.type === 'preuve') {
+      body += field('reference', 'Référence vérifiable', node.reference) + field('indicator', 'Indicateur', node.indicator) +
+        field('period', 'Période', node.period) + field('territory', 'Territoire', node.territory) + field('value', 'Valeur', node.value) +
+        '<label class="field">Données simulées ?<select data-node-field="simulated" data-node-id="' + esc(node.id) + '">' +
+        '<option value=""' + (node.simulated ? '' : ' selected') + '>Non</option>' +
+        '<option value="oui"' + (node.simulated === 'oui' ? ' selected' : '') + '>Oui, jeu pédagogique</option></select></label>';
+    }
+    if (node.type === 'verification') {
+      body += area('result', 'Ce qui a été vérifié', node.result) + area('uncertainty', 'Incertitude restante', node.uncertainty) +
+        '<label class="field">Statut<select data-node-field="status" data-node-id="' + esc(node.id) + '">' + status + '</select></label>';
+    }
+    body += area('note', 'Note', node.note);
+    return '<h3>' + esc(node.type) + '</h3>' + body +
+      '<button class="btn ghost" type="button" data-action="delete-node">Supprimer ce nœud</button>';
+  }
+
+  function relationForm(selected) {
+    if (!selected) return '';
+    const others = state.graph.nodes.filter((node) => node.id !== selected.id);
+    const to = others[0] ? others[0].id : '';
+    const chosenTo = valueOf('#rel-to') || to;
+    const target = graph.nodeById(state.graph, chosenTo);
+    const options = data.graphSchema.relationTypes.filter((rule) => target && graph.allows(rule.id, selected, target));
+    return '<h3>Nouveau lien depuis ce nœud</h3>' +
+      '<input id="rel-from" type="hidden" value="' + esc(selected.id) + '">' +
+      '<label class="field">Vers<select id="rel-to">' + others.map((node) => (
+        '<option value="' + esc(node.id) + '"' + (node.id === chosenTo ? ' selected' : '') + '>' + esc(node.title || node.type) + '</option>'
+      )).join('') + '</select></label>' +
+      '<label class="field">Type<select id="rel-type">' + (options.length ? options.map((rule) => (
+        '<option value="' + esc(rule.id) + '">' + esc(rule.label) + '</option>'
+      )).join('') : '<option value="">Aucun type possible</option>') + '</select></label>' +
+      '<label class="field">Justification<input id="rel-why" type="text"></label>' +
+      '<label class="field">Indépendance, seulement pour « Confirme »<select id="rel-indep">' +
+      '<option value="inconnue">Pas encore établie</option><option value="meme-document">Même document ou même communiqué</option>' +
+      '<option value="independante">Source indépendante</option></select></label>' +
+      '<button class="btn primary" type="button" data-action="add-relation">Créer le lien</button>';
+  }
+
+  function conclusionForm() {
+    const conclusion = state.graph.conclusion;
+    const status = data.graphSchema.statuses.map((item) => (
+      '<option value="' + item.id + '"' + (conclusion.status === item.id ? ' selected' : '') + '>' + esc(item.label) + '</option>'
+    )).join('');
+    const rows = state.graph.nodes.map((node) => '<li>' + esc(node.type) + ' — ' + esc(node.title || node.text || node.url || node.id) + '</li>').join('');
+    return '<section class="card" id="rapport"><h2>Conclusion de l’investigation</h2>' +
+      '<label class="field">Statut<select name="invest-status">' + status + '</select></label>' +
+      '<label class="field">Conclusion<textarea data-invest="text">' + esc(conclusion.text) + '</textarea></label>' +
+      '<label class="field">Incertitudes restantes<textarea data-invest="uncertainties">' + esc(conclusion.uncertainties) + '</textarea></label>' +
+      '<h3>Pièces</h3><ul>' + rows + '</ul>' +
+      (state.importError ? '<p class="feedback warn">' + esc(state.importError) + '</p>' : '') +
+      '<div class="row no-print"><button class="btn primary" type="button" data-action="export-json">Exporter le JSON</button>' +
+      '<label class="btn">Importer un JSON<input data-import type="file" accept="application/json,.json" hidden></label>' +
+      '<button class="btn" type="button" data-action="print">Imprimer le rapport</button></div></section>';
+  }
+
   function teacherPanel() {
     return '<aside class="teacher"><h2>Lecture enseignant</h2><p>Cette lecture est dans la page. Elle ne recueille aucun nom.</p><pre>' + esc(teacherText()) + '</pre></aside>';
   }
@@ -458,8 +730,8 @@
     ].join('\n');
   }
 
-  function download(text, name) {
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  function download(text, name, mime) {
+    const blob = new Blob([text], { type: mime || 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -467,6 +739,97 @@
     link.click();
     URL.revokeObjectURL(url);
   }
+
+  app.addEventListener('pointerdown', (event) => {
+    const nodeEl = event.target.closest('[data-node]');
+    if (nodeEl) {
+      const node = graph.nodeById(state.graph, nodeEl.dataset.node);
+      drag = { id: node.id, x: event.clientX, y: event.clientY, ox: node.x, oy: node.y, moved: false };
+      return;
+    }
+    if (event.target.closest('[data-pan]')) {
+      drag = { pan: true, x: event.clientX, y: event.clientY, view: Object.assign({}, state.view) };
+    }
+  });
+
+  app.addEventListener('pointermove', (event) => {
+    if (!drag) return;
+    if (drag.pan) {
+      state.view.x = drag.view.x + (event.clientX - drag.x);
+      state.view.y = drag.view.y + (event.clientY - drag.y);
+      const group = app.querySelector('.graph g');
+      if (group) group.setAttribute('transform', 'translate(' + state.view.x + ' ' + state.view.y + ') scale(' + state.view.scale + ')');
+      return;
+    }
+    const dx = (event.clientX - drag.x) / state.view.scale;
+    const dy = (event.clientY - drag.y) / state.view.scale;
+    if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+    const el = app.querySelector('[data-node="' + drag.id + '"]');
+    if (el) el.setAttribute('transform', 'translate(' + (drag.ox + dx) + ' ' + (drag.oy + dy) + ')');
+  });
+
+  app.addEventListener('pointerup', () => {
+    if (!drag) return;
+    if (!drag.pan && drag.moved) {
+      const el = app.querySelector('[data-node="' + drag.id + '"]');
+      const match = el && /translate\(([-\d.]+) ([-\d.]+)\)/.exec(el.getAttribute('transform') || '');
+      if (match) {
+        remember();
+        state.graph = graph.moveNode(state.graph, drag.id, Number(match[1]), Number(match[2])).graph;
+        save();
+      }
+    }
+    drag = null;
+  });
+
+  app.addEventListener('keydown', (event) => {
+    if (event.target.closest('input, textarea, select')) {
+      if (event.key === 'Escape') event.target.blur();
+      return;
+    }
+    if (event.key === 'Escape') {
+      state.selected = '';
+      render();
+      return;
+    }
+    const nodeEl = event.target.closest('[data-node]');
+    if (!nodeEl) return;
+    const moved = graph.nudge(state.graph, nodeEl.dataset.node, event.key);
+    if (moved) {
+      event.preventDefault();
+      remember();
+      state.graph = moved;
+      const id = nodeEl.dataset.node;
+      render();
+      const again = app.querySelector('[data-node="' + id + '"]');
+      if (again) again.focus();
+      return;
+    }
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      remember();
+      state.graph = graph.removeNode(state.graph, nodeEl.dataset.node).graph;
+      state.selected = '';
+      render();
+      return;
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      state.selected = nodeEl.dataset.node;
+      render();
+      const field = app.querySelector('.side-panel input, .side-panel textarea, .side-panel select');
+      if (field) field.focus();
+    }
+  });
+
+  app.addEventListener('wheel', (event) => {
+    if (!event.target.closest('.graph')) return;
+    event.preventDefault();
+    state.view.scale = Math.min(2, Math.max(0.35, state.view.scale + (event.deltaY < 0 ? 0.08 : -0.08)));
+    const group = app.querySelector('.graph g');
+    if (group) group.setAttribute('transform', 'translate(' + state.view.x + ' ' + state.view.y + ') scale(' + state.view.scale + ')');
+    save();
+  }, { passive: false });
 
   render();
 })();

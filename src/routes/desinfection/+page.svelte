@@ -197,6 +197,10 @@
 				<a href="/laboratoire">Laboratoire</a>
 				<a href="/info-agricole/">Information agricole</a>
 				<a href="/redox/">Redox</a>
+				<a href="/alcalinite/">Alcalinité</a>
+				<a href="/alcalinite/equilibre">Filière forage</a>
+				<a href="/liens">Liens</a>
+				<a href="/documents-tp">Documents de TP</a>
 			</p>
 		</div>
 		<nav class="scenarios" aria-label="Ateliers">

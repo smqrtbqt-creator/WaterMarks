@@ -1,7 +1,9 @@
 <script lang="ts">
+	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
 	import Inspector from '$lib/components/Inspector.svelte';
 	import PlantSchematic from '$lib/components/PlantSchematic.svelte';
 	import Trials from '$lib/components/Trials.svelte';
+	import { makeToast, type Toast } from '$lib/feedback';
 	import { hypotheses, plant, scenarioById, scenarios } from '$lib/sim/catalog';
 	import { evaluate, stepAccumulators } from '$lib/sim/engine';
 	import { formatClock, n } from '$lib/sim/format';
@@ -21,6 +23,12 @@
 	let trialNo = $state(1);
 	let won = $state(false);
 	let hypothesesDialog = $state<HTMLDialogElement | null>(null);
+	let toasts = $state<Toast[]>([]);
+	let celebratedWin = $state(false);
+	let justHitGoals = $state<string[]>([]);
+	/** Suivi non réactif pour éviter les boucles d’effet */
+	let prevGoalOk: Record<string, boolean> = {};
+	let prevCritical = 0;
 
 	const scenario = $derived(scenarioById(scenarioId));
 	const evaluation = $derived(evaluate(plant, scenario, settings, acc, modifiers));
@@ -39,6 +47,10 @@
 		};
 	}
 
+	function pushToast(kind: Toast['kind'], text: string) {
+		toasts = [...toasts, makeToast(kind, text)].slice(-4);
+	}
+
 	function load(id: string) {
 		const next = scenarioById(id);
 		scenarioId = id;
@@ -49,8 +61,30 @@
 		trials = [];
 		trialNo = 1;
 		won = false;
+		celebratedWin = false;
+		prevGoalOk = {};
+		prevCritical = 0;
+		justHitGoals = [];
 		samples = [];
 		samples = [freshSample(acc)];
+	}
+
+	function noteGoalHits(goals: { id: string; label: string; ok: boolean }[]) {
+		const hits: string[] = [];
+		const nextMap: Record<string, boolean> = {};
+		for (const goal of goals) {
+			nextMap[goal.id] = goal.ok;
+			if (goal.ok && prevGoalOk[goal.id] === false) {
+				hits.push(goal.id);
+				pushToast('ok', `Objectif atteint : ${goal.label}`);
+			}
+		}
+		prevGoalOk = nextMap;
+		if (!hits.length) return;
+		justHitGoals = hits;
+		window.setTimeout(() => {
+			justHitGoals = justHitGoals.filter((id) => !hits.includes(id));
+		}, 900);
 	}
 
 	function restart() {
@@ -102,6 +136,23 @@
 	});
 
 	$effect(() => {
+		noteGoalHits(evaluation.goals);
+		if (criticalCount > prevCritical) {
+			pushToast(
+				'alarm',
+				criticalCount === 1
+					? 'Alarme critique : vérifiez les ouvrages signalés.'
+					: `${criticalCount} alarmes critiques actives.`
+			);
+		}
+		prevCritical = criticalCount;
+		if (won && !celebratedWin) {
+			celebratedWin = true;
+			pushToast('ok', 'Bravo — tous les objectifs sont tenus. Vous pouvez encore perturber la station.');
+		}
+	});
+
+	$effect(() => {
 		if (!running) return;
 		const id = window.setInterval(tick, 200);
 		return () => window.clearInterval(id);
@@ -129,6 +180,10 @@
 				<a href="/laboratoire">Laboratoire</a>
 				<a href="/info-agricole/">Information agricole</a>
 				<a href="/redox/">Redox</a>
+				<a href="/alcalinite/">Alcalinité</a>
+				<a href="/alcalinite/equilibre">Filière forage</a>
+				<a href="/liens">Liens</a>
+				<a href="/documents-tp">Documents de TP</a>
 			</p>
 		</div>
 		<nav class="scenarios" aria-label="Scénarios">
@@ -176,7 +231,7 @@
 		<div class="goals" aria-live="polite">
 			<ul>
 				{#each evaluation.goals as goal (goal.id)}
-					<li class:ok={goal.ok}>
+					<li class:ok={goal.ok} class:just-hit={justHitGoals.includes(goal.id)}>
 						<span>{goal.ok ? 'Atteint' : 'En cours'}</span>
 						{goal.label}
 						<strong>{goal.reading}</strong>
@@ -252,6 +307,8 @@
 			usine.
 		</p>
 	</footer>
+
+	<FeedbackToast bind:toasts />
 </div>
 
 <dialog bind:this={hypothesesDialog}>

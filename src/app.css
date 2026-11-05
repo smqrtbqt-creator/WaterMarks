@@ -890,8 +890,60 @@ dialog .primary {
 	text-decoration: none;
 }
 
-.plant-switch a:hover {
+.plant-switch a:hover,
+.plant-switch a[aria-current='page'] {
 	text-decoration: underline;
+}
+
+.links .top,
+.tp-docs .top {
+	display: block;
+}
+
+.resource-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.75rem;
+}
+
+.resource-card {
+	display: grid;
+	gap: 0.35rem;
+	justify-items: start;
+}
+
+.resource-card h2 {
+	margin: 0;
+}
+
+.resource-card a.primary {
+	display: inline-block;
+	margin-top: 0.35rem;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.resource-url {
+	margin: 0;
+	color: var(--faint);
+	font-family: 'IBM Plex Mono', ui-monospace, monospace;
+	font-size: 0.75rem;
+	line-height: 1.4;
+	word-break: break-all;
+}
+
+.resource-sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 .bastide .clock {
@@ -1598,4 +1650,89 @@ dialog .primary {
 .lab-flow.is-reduced .lab-pipe i,
 .lab-flow.is-reduced .lab-profile span {
 	animation: none;
+}
+
+/* --- Feedback toast (QW-0) --- */
+.feedback-stack {
+	position: fixed;
+	z-index: 80;
+	right: 1rem;
+	bottom: 1rem;
+	display: grid;
+	gap: 0.55rem;
+	width: min(360px, calc(100vw - 2rem));
+	pointer-events: none;
+}
+
+.feedback-toast {
+	pointer-events: auto;
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.5rem;
+	align-items: start;
+	padding: 0.75rem 0.85rem;
+	border-radius: 14px;
+	border: 1px solid var(--line);
+	background: rgba(13, 33, 41, 0.96);
+	box-shadow: var(--shadow);
+	animation: feedback-in 0.28s ease both;
+}
+
+.feedback-toast p {
+	margin: 0;
+	font-size: 0.92rem;
+	line-height: 1.35;
+}
+
+.feedback-ok {
+	border-color: rgba(142, 214, 168, 0.65);
+}
+
+.feedback-alarm {
+	border-color: rgba(240, 122, 104, 0.7);
+}
+
+.feedback-info {
+	border-color: rgba(223, 245, 106, 0.45);
+}
+
+.feedback-close {
+	border: 0;
+	background: transparent;
+	color: var(--muted);
+	font-size: 1.1rem;
+	line-height: 1;
+	padding: 0 0.15rem;
+}
+
+.goals li.ok.just-hit {
+	animation: goal-flash 0.9s ease;
+}
+
+@keyframes feedback-in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes goal-flash {
+	0%,
+	100% {
+		box-shadow: none;
+	}
+	40% {
+		box-shadow: 0 0 0 2px rgba(142, 214, 168, 0.55);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.feedback-toast,
+	.goals li.ok.just-hit {
+		animation: none;
+	}
 }

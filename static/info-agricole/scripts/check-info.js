@@ -7,7 +7,11 @@ import '../logic/hypothesis.js';
 import '../logic/sources.js';
 import '../logic/conclusion.js';
 
-const { calc, hypothesis, claim, sourcesLogic, catalog, plots, conclusion } = globalThis.InfoAgri;
+import '../data/graph.js';
+import '../logic/graph.js';
+import '../ui/map.js';
+
+const { calc, hypothesis, claim, sourcesLogic, catalog, plots, conclusion, graph, map } = globalThis.InfoAgri;
 
 const plotReview = calc.reviewPlot({
   volume: '-20',
@@ -77,5 +81,55 @@ assert.strictEqual(catalog.sources.length, 10);
 assert.ok(catalog.sources.every((source) => source.url.startsWith('https://')));
 assert.strictEqual(catalog.sources.find((source) => source.id === 'villedieu').status, 'maintenance');
 assert.strictEqual(catalog.sources.find((source) => source.id === 'memento').status, 'erreur');
+
+const seeded = graph.seed(claim.statement, catalog.sources);
+assert.strictEqual(seeded.nodes.filter((node) => node.type === 'source').length, 10);
+assert.strictEqual(seeded.relations.length, 0);
+assert.ok(seeded.nodes.every((node) => node.type !== 'source' || node.author === ''));
+assert.strictEqual(graph.orphanRelations(seeded).length, 0);
+
+const created = graph.addNode(seeded, { id: 'preuve-1', type: 'preuve', x: 10, y: 20, title: 'Essai de Pusignan', reference: '' });
+assert.strictEqual(created.ok, true);
+const edited = graph.updateNode(created.graph, 'preuve-1', { reference: 'ARVALIS, 2 août 2018' });
+assert.strictEqual(graph.nodeById(edited.graph, 'preuve-1').reference, 'ARVALIS, 2 août 2018');
+const linked = graph.addRelation(edited.graph, { id: 'rel-1', from: 'preuve-1', to: 'aff-eau', type: 'etaye', justification: 'Même volume, rendement semblable.' });
+assert.strictEqual(linked.ok, true);
+const invalid = graph.addRelation(linked.graph, { from: 'src-agreste', to: 'aff-eau', type: 'etaye' });
+assert.strictEqual(invalid.ok, false);
+const removed = graph.removeRelation(linked.graph, 'rel-1');
+assert.strictEqual(removed.graph.relations.length, 0);
+const gone = graph.removeNode(linked.graph, 'preuve-1');
+assert.strictEqual(graph.orphanRelations(gone.graph).length, 0);
+assert.strictEqual(gone.graph.relations.length, 0);
+
+const roundTrip = graph.importInvestigation(graph.exportInvestigation(seeded));
+assert.strictEqual(roundTrip.ok, true);
+assert.strictEqual(roundTrip.graph.nodes.length, seeded.nodes.length);
+assert.strictEqual(graph.importInvestigation({ format: 1 }).ok, false);
+assert.strictEqual(graph.importInvestigation({ format: 99, nodes: [], relations: [], conclusion: { status: 'a-verifier', text: '', uncertainties: '' } }).ok, false);
+const duplicate = graph.exportInvestigation(seeded);
+duplicate.nodes.push(Object.assign({}, duplicate.nodes[0]));
+assert.strictEqual(graph.importInvestigation(duplicate).ok, false);
+const dangling = graph.exportInvestigation(seeded);
+dangling.relations.push({ id: 'orpheline', from: 'absent', to: 'aff-eau', type: 'porte-sur', justification: '', independence: '' });
+assert.strictEqual(graph.importInvestigation(dangling).ok, false);
+
+const named = graph.updateNode(seeded, 'src-agreste', { documentId: 'communique-a', author: 'Agreste', date: '2024' });
+const namedToo = graph.updateNode(named.graph, 'src-memento', { documentId: 'communique-a', author: 'Agreste', date: '2025' });
+const firstConfirm = graph.addRelation(namedToo.graph, { id: 'c2', from: 'src-memento', to: 'aff-eau', type: 'confirme', independence: 'independante' });
+const secondConfirm = graph.addRelation(firstConfirm.graph, { id: 'c3', from: 'src-agreste', to: 'aff-eau', type: 'confirme', independence: 'independante' });
+assert.strictEqual(secondConfirm.ok, true);
+assert.ok(graph.alerts(secondConfirm.graph).some((item) => item.text.includes('même identifiant de document')));
+const unknown = graph.addRelation(seeded, { id: 'c1', from: 'src-wikipedia', to: 'aff-eau', type: 'confirme', independence: 'inconnue' });
+assert.ok(graph.alerts(unknown.graph).some((item) => item.id === 'independance-c1'));
+assert.ok(graph.alerts(seeded).some((item) => item.text.includes('pas encore de preuve')));
+assert.ok(graph.alerts(seeded).some((item) => item.text.includes('Non vérifié ne veut pas dire faux')));
+
+const nudged = graph.nudge(seeded, 'aff-eau', 'ArrowRight');
+assert.strictEqual(graph.nodeById(nudged, 'aff-eau').x, graph.nodeById(seeded, 'aff-eau').x + 16);
+const markup = map.mapMarkup(seeded, { x: 0, y: 0, scale: 1 }, 'aff-eau', '');
+assert.ok(markup.includes('tabindex="0"'));
+assert.ok(markup.includes('Suppr'));
+assert.ok(markup.includes('aria-label'));
 
 console.log('check-info: ok');

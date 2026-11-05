@@ -2,8 +2,10 @@
 	import { onMount } from 'svelte';
 	import Analysis from '$lib/components/simulator/Analysis.svelte';
 	import Diagnosis from '$lib/components/simulator/Diagnosis.svelte';
+	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
 	import Outcome from '$lib/components/simulator/Outcome.svelte';
 	import Plant from '$lib/components/simulator/Plant.svelte';
+	import { makeToast, type Toast } from '$lib/feedback';
 	import { CASES, caseById } from '$lib/simulator/cases';
 	import { MODEL_LIMITS, simulate } from '$lib/simulator/engine';
 	import { defaultSettings } from '$lib/simulator/treatments';
@@ -20,6 +22,7 @@
 	let reduced = $state(false);
 	let tick = $state(0);
 	let memory = $state<ReturnType<typeof simulate>['after'] | null>(null);
+	let toasts = $state<Toast[]>([]);
 
 	const study = $derived(caseById(studyId));
 	const simulation = $derived(simulate(study.water, settings));
@@ -40,6 +43,10 @@
 		reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	});
 
+	function pushToast(kind: Toast['kind'], text: string) {
+		toasts = [...toasts, makeToast(kind, text)].slice(-4);
+	}
+
 	function load(id: string) {
 		const next = caseById(id);
 		studyId = next.id;
@@ -53,10 +60,19 @@
 		memory = null;
 	}
 
+	function announceJudgement() {
+		const kind = judgement.status === 'atteint' ? 'ok' : judgement.status === 'partiel' ? 'info' : 'alarm';
+		pushToast(kind, judgement.title);
+		if (judgement.gasAlert) {
+			pushToast('alarm', 'Attention H₂S : l’odeur ne mesure pas le danger. Maîtrisez le transfert à l’air.');
+		}
+	}
+
 	function launch() {
 		hasRun = true;
 		playing = !reduced;
 		tick = 0;
+		announceJudgement();
 	}
 </script>
 
@@ -75,6 +91,10 @@
 				<a href="/desinfection">Désinfection</a>
 				<a href="/info-agricole/">Information agricole</a>
 				<a href="/redox/">Redox</a>
+				<a href="/alcalinite/">Alcalinité</a>
+				<a href="/alcalinite/equilibre">Filière forage</a>
+				<a href="/liens">Liens</a>
+				<a href="/documents-tp">Documents de TP</a>
 			</p>
 		</div>
 		<div class="lab-actions">
@@ -112,4 +132,6 @@
 			{/each}
 		</ul>
 	</details>
+
+	<FeedbackToast bind:toasts />
 </div>

@@ -71,7 +71,7 @@
 <section class="panel lab-card" aria-labelledby="lab-result-title">
 	<p class="mark">Zone D · résultats</p>
 	<h2 id="lab-result-title">Avant / après</h2>
-	<p class="lab-status {judgement.status}" role="status">{judgement.title}</p>
+	<p class="lab-status {judgement.status}" role="status" aria-live="polite">{judgement.title}</p>
 	{#if judgement.gasAlert}
 		<p class="lab-alert">
 			Le sulfure d’hydrogène est toxique. L’odeur d’œuf pourri n’est pas une mesure de sa concentration. S’il passe dans l’air, ce transfert doit être maîtrisé : l’aération ne le détruit pas.
