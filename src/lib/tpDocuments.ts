@@ -29,5 +29,15 @@ export const tpDocuments: TpDocument[] = [
 		title: 'Modèle de CV — Bac Pro SAPAT',
 		detail: 'Fichier LibreOffice à compléter : formation, stage, expériences.',
 		href: '/documents-tp/CV_template_arrondi_SAPAT.odt'
+	},
+	{
+		title: 'Seconde pro agricole — CV et données personnelles',
+		detail: 'Fiche PDF du TD : compléter un CV sans exposer de données inutiles.',
+		href: '/documents-tp/education_2026-11-04_094129.pdf'
+	},
+	{
+		title: 'Modèle de CV — Seconde professionnelle agricole',
+		detail: 'Fichier Word à compléter : formation, stage, expériences.',
+		href: '/documents-tp/CV_Seconde_agricole.docx'
 	}
 ];
