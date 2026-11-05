@@ -11,6 +11,11 @@ export type TpDocument = {
 
 export const tpDocuments: TpDocument[] = [
 	{
+		title: 'BTSA GEMEAU — pH de la Gartempe, Calc',
+		detail: 'Exploiter les mesures réelles de pH dans LibreOffice Calc. Fiche PDF.',
+		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige-3.pdf'
+	},
+	{
 		title: 'TP pH de la Gartempe — calculs corrigés',
 		detail: 'Fiche PDF : corrigé des calculs de pH.',
 		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige.pdf'
