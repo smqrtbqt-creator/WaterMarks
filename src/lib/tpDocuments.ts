@@ -22,6 +22,12 @@ export const tpDocuments: TpDocument[] = [
 		href: '/documents-tp/TP_fiabilite_premiers_secours.pdf'
 	},
 	{
+		title: 'Seconde Aquaculture — L’eau et l’agriculture en France',
+		detail:
+			'TP 2 : surfaces irriguées, cycle de l’eau et techniques d’irrigation, puis présentation Impress. Fiche PDF.',
+		href: '/documents-tp/2de-Aqua-TP2.pdf'
+	},
+	{
 		title: 'Première STAV — pH de la Gartempe, Calc',
 		detail:
 			'Étudier le pH réel de la Gartempe dans LibreOffice Calc : import CSV, indicateurs et graphiques. Fiche PDF.',
