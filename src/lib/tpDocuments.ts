@@ -22,6 +22,12 @@ export const tpDocuments: TpDocument[] = [
 		href: '/documents-tp/TP_fiabilite_premiers_secours.pdf'
 	},
 	{
+		title: 'Première STAV — pH de la Gartempe, Calc',
+		detail:
+			'Étudier le pH réel de la Gartempe dans LibreOffice Calc : import CSV, indicateurs et graphiques. Fiche PDF.',
+		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige-5.pdf'
+	},
+	{
 		title: 'BTSA GEMEAU — pH de la Gartempe, Calc',
 		detail: 'Exploiter les mesures réelles de pH dans LibreOffice Calc. Fiche PDF.',
 		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige-3.pdf'

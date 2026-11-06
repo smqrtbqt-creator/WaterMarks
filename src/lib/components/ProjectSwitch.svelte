@@ -4,6 +4,7 @@
 	let { current = '' }: { current?: string } = $props();
 
 	const links = [
+		{ id: 'tp', href: `${base}/tp`, label: 'TP' },
 		{ id: 'home', href: `${base}/`, label: 'Rivière Blanche' },
 		{ id: 'bastide', href: `${base}/bastide`, label: 'La Bastide' },
 		{ id: 'desinfection', href: `${base}/desinfection`, label: 'Désinfection' },
@@ -13,8 +14,7 @@
 		{ id: 'alcalinite', href: `${base}/alcalinite/`, label: 'Alcalinité' },
 		{ id: 'forage', href: `${base}/alcalinite/equilibre`, label: 'Filière forage' },
 		{ id: 'liens', href: `${base}/liens`, label: 'Liens' },
-		{ id: 'secours', href: `${base}/secours-info/`, label: 'Premiers secours' },
-		{ id: 'tp', href: `${base}/documents-tp`, label: 'Documents de TP' }
+		{ id: 'secours', href: `${base}/secours-info/`, label: 'Premiers secours' }
 	];
 </script>
 
