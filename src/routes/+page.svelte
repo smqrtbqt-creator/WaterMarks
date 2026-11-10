@@ -1,5 +1,8 @@
 <script lang="ts">
 	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
+	import HeroChip from '$lib/components/HeroChip.svelte';
+	import RoleAlert from '$lib/components/RoleAlert.svelte';
+	import { flaque } from '$lib/game/flaque.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Inspector from '$lib/components/Inspector.svelte';
 	import PlantSchematic from '$lib/components/PlantSchematic.svelte';
@@ -158,6 +161,10 @@
 		const id = window.setInterval(tick, 200);
 		return () => window.clearInterval(id);
 	});
+
+	$effect(() => {
+		if (won) flaque.solve('riviere');
+	});
 </script>
 
 <svelte:head>
@@ -176,6 +183,7 @@
 			<p class="mark">Station d’eau potable</p>
 			<h1>Rivière Blanche</h1>
 			<ProjectSwitch current="home" />
+			<HeroChip />
 		</div>
 		<nav class="scenarios" aria-label="Scénarios">
 			{#each scenarios as item (item.id)}
@@ -239,6 +247,16 @@
 			</div>
 		</div>
 	</section>
+
+	<RoleAlert
+		speaker="Goutte"
+		role="Héros de la flaque"
+		line={won
+			? 'Les objectifs tiennent. Ce scénario de la Rivière Blanche est le gros morceau, pas un combat de flaque.'
+			: criticalCount > 0
+				? `${criticalCount} alarme${criticalCount > 1 ? 's' : ''} critique${criticalCount > 1 ? 's' : ''}. La station tousse. Tiens les objectifs : l’arène ne me fera pas monter.`
+				: `Production ${n(evaluation.productionM3h, 0)} m³/h, demande ${n(evaluation.demandM3h, 0)} m³/h. On garde le scénario jusqu’au bout.`}
+	/>
 
 	{#if won}
 		<p class="success">Les objectifs restent atteints. Vous pouvez continuer à perturber la station et comparer.</p>

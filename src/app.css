@@ -1814,15 +1814,55 @@ dialog .primary {
 
 .sample-point {
 	position: absolute;
+	width: 14px;
+	height: 14px;
+	padding: 0;
+	border-radius: 50%;
+	border: 2px solid var(--accent);
+	background: #07161c;
 	transform: translate(-50%, -50%);
-	max-width: 9rem;
-	text-align: left;
+}
+
+.sample-name {
+	position: absolute;
+	white-space: nowrap;
+	padding: 0.15rem 0.5rem;
+	border-radius: 999px;
+	border: 1px solid var(--line);
+	background: rgba(7, 22, 28, 0.92);
 	font-size: 0.82rem;
+	line-height: 1.3;
+}
+
+.sample-point[data-side='up'] .sample-name {
+	left: 50%;
+	bottom: 16px;
+	transform: translateX(-50%);
+}
+
+.sample-point[data-side='up-left'] .sample-name {
+	right: 0;
+	bottom: 16px;
+}
+
+.sample-point[data-side='left'] .sample-name {
+	right: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.sample-point[data-side='right'] .sample-name {
+	left: 18px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .sample-point[aria-pressed='true'] {
+	background: var(--accent);
+}
+
+.sample-point[aria-pressed='true'] .sample-name {
 	border-color: var(--accent);
-	background: rgba(223, 245, 106, 0.16);
 }
 
 .sample-log {
@@ -1858,6 +1898,124 @@ dialog .primary {
 
 .fixed-species {
 	color: var(--muted);
+}
+
+.cinematic {
+	position: fixed;
+	inset: 0;
+	z-index: 30;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+	background: rgba(4, 12, 16, 0.78);
+}
+
+.cinematic-card {
+	display: grid;
+	grid-template-columns: 120px 1fr;
+	gap: 1rem;
+	max-width: 40rem;
+	padding: 1rem;
+	border-radius: 18px;
+	border: 1px solid var(--line);
+	background: #102830;
+}
+
+.cinematic-card h2,
+.cinematic-card p {
+	margin: 0 0 0.6rem;
+}
+
+.cinematic-face {
+	width: 120px;
+	height: auto;
+}
+
+.cinematic-strip,
+.enigma-line {
+	margin: 0.6rem 0;
+	padding: 0.7rem 0.9rem;
+	border-left: 3px solid var(--accent);
+	color: var(--muted);
+}
+
+.role-alert {
+	margin: 0.7rem 0 0.2rem;
+	padding: 0.65rem 0.85rem;
+	border-radius: 14px;
+	border: 1px solid var(--line);
+	background: rgba(13, 33, 41, 0.78);
+}
+
+.role-alert p {
+	margin: 0;
+}
+
+.role-alert p + p {
+	margin-top: 0.25rem;
+}
+
+.hero-chip {
+	margin: 0.35rem 0 0;
+}
+
+.hero-chip a {
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.static-head {
+	margin: 0;
+}
+
+.static-head svg {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.static-head figcaption {
+	color: var(--muted);
+	font-size: 0.92rem;
+}
+
+.arena-fighters {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+	align-items: end;
+	min-height: 16rem;
+	padding: 1rem;
+	border-radius: 16px;
+	border: 1px solid var(--line);
+	background: #07161c;
+}
+
+.arena-hero,
+.arena-foe {
+	display: grid;
+	justify-items: center;
+	gap: 0.35rem;
+	background: transparent;
+	border: 0;
+	color: inherit;
+}
+
+.arena-blob {
+	width: 92px;
+	height: 72px;
+	border-radius: 50% 50% 46% 54%;
+	background: radial-gradient(circle at 35% 30%, #dff56a, #1d6d8a 70%);
+}
+
+.hero-blob {
+	background: radial-gradient(circle at 35% 30%, #fff, #8ec8e6 55%, #1d6d8a);
+}
+
+@media (max-width: 720px) {
+	.cinematic-card {
+		grid-template-columns: 1fr;
+	}
 }
 
 .eq {

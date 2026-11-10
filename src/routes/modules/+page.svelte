@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import HeroChip from '$lib/components/HeroChip.svelte';
+	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
+	import { ENIGMAS, MONSTERS, canBeat } from '$lib/game/flaque';
+	import { flaque } from '$lib/game/flaque.svelte';
 </script>
 
 <svelte:head>
@@ -13,9 +17,22 @@
 			<p class="mark">Activités</p>
 			<h1>Modules</h1>
 			<ProjectSwitch current="modules" />
+			<HeroChip />
 		</div>
 	</header>
-	<p class="lede">On règle, on prélève, on lit le sens de la réaction. Rien n’est noté.</p>
+	<RoleAlert
+		speaker="Goutte"
+		role="Héros de la flaque"
+		line="Marceline crie à la bâche, Noé garde le bassin, Irma lit Q et K, Sifflard arbitre les monstres. Je ne monte d’un niveau que si l’énigme est vraie."
+	/>
+	<p class="lede">
+		Goutte ne gagne un niveau et un objet qu’en résolvant une énigme.
+		Dans l’arène, on tape des monstres d’eau : ça n’offre rien.
+		{#if !canBeat(flaque.save, MONSTERS[1])}
+			Sans la clé à molette, le canard de bâche dissout Goutte.
+		{/if}
+		{ENIGMAS.filter((enigma) => flaque.save.solved.includes(enigma.id)).length} / {ENIGMAS.length} énigmes résolues.
+	</p>
 	<ul class="module-grid">
 		<li>
 			<a href="{base}/modules/pompage">
@@ -36,6 +53,13 @@
 				<span>03</span>
 				<strong>Énergie de Gibbs</strong>
 				<p>Niveaux de G des réactifs et des produits. On peut inverser le sens.</p>
+			</a>
+		</li>
+		<li>
+			<a href="{base}/modules/arene">
+				<span>04</span>
+				<strong>Arène de la flaque</strong>
+				<p>Des monstres de plus en plus pénibles. Les coups ne font pas monter Goutte.</p>
 			</a>
 		</li>
 	</ul>

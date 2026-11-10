@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { MONSTERS, canBeat, damageOf, emptySave, levelOf, solve } from '../src/lib/game/flaque.ts';
 import { CALCITE_KS, IRON_K, gibbsReading, qrCalcite, qrDenitrification, qrIron } from '../src/lib/modules/gibbs.ts';
 import { headM, levelAfter, powerKw, pumpFlowM3h } from '../src/lib/modules/pump.ts';
 import { PLACES, sample } from '../src/lib/modules/watershed.ts';
@@ -53,5 +54,21 @@ assert.equal(gibbsReading(ironUi(5, 1, 0.21, 7), IRON_K, 15).sense, 'direct');
 assert.equal(gibbsReading(ironUi(5, 2, 0.21, 7), IRON_K, 15).sense, 'inverse');
 assert.equal(gibbsReading(ironUi(5, 1, 0.21, 6.6), IRON_K, 15).sense, 'direct');
 assert.equal(gibbsReading(ironUi(5, 1, 0.21, 7.4), IRON_K, 15).sense, 'inverse');
+
+let save = emptySave();
+assert.equal(levelOf(save), 1);
+assert.equal(damageOf(save), 1);
+assert.equal(canBeat(save, MONSTERS[0]), true);
+assert.equal(canBeat(save, MONSTERS[1]), false);
+const once = solve(save, 'bache');
+assert.equal(once.fresh, true);
+assert.equal(solve(once.save, 'bache').fresh, false);
+save = once.save;
+assert.equal(levelOf(save), 2);
+assert.equal(canBeat(save, MONSTERS[1]), true);
+assert.equal(canBeat(save, MONSTERS[4]), false);
+for (const id of ['hstat', 'ruisseau', 'bascule', 'riviere'] as const) save = solve(save, id).save;
+assert.equal(levelOf(save), 6);
+assert.equal(canBeat(save, MONSTERS[4]), true);
 
 console.log('check-modules: ok');

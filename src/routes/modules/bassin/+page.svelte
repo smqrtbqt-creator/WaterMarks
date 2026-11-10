@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import HeroChip from '$lib/components/HeroChip.svelte';
+	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
+	import { ENIGMAS } from '$lib/game/flaque';
+	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
 	import { NITRATE_REFERENCE_MG_L, PLACES, sample, type PlaceId, type WeatherId } from '$lib/modules/watershed';
 
@@ -11,12 +15,29 @@
 	const place = $derived(PLACES.find((item) => item.id === selected) ?? PLACES[0]);
 	const reading = $derived(sample(place, weather));
 	const weatherLabel = $derived(weather === 'sec' ? 'Temps sec' : weather === 'pluie' ? 'Pluie' : 'Après épandage');
+	const enigma = ENIGMAS.find((item) => item.id === 'ruisseau');
+	const alertLine = $derived.by(() => {
+		if (weather === 'pluie') {
+			return `Il pleut sur ${place.name}. Turbidité ${n(reading.turbidity, 1)} NTU, nitrates ${n(reading.nitrate, 0)} mg/L. L’eau se trouble et les nitrates se diluent.`;
+		}
+		if (weather === 'epandage' && place.id === 'champ' && reading.nitrate > NITRATE_REFERENCE_MG_L) {
+			return `Le ruisseau des champs est à ${n(reading.nitrate, 0)} mg/L. C’est au-dessus de 50, la limite de l’eau destinée à la consommation. Ce prélèvement ne dit pas que la rivière est potable.`;
+		}
+		if (weather === 'epandage') return `L’épandage ne charge pas ${place.name}. Seul le ruisseau des champs encaisse les nitrates.`;
+		if (place.id === 'confluence') return 'Tu es pile à la jonction. Les deux cours d’eau se rencontrent ici, pas avant.';
+		if (place.id === 'aval') return 'C’est le point le plus bas, avant la prise d’eau. Un seul prélèvement ne décrit pas le bassin.';
+		if (place.id === 'champ') return `Temps sec, et ce nom ne désigne que ce trait : ${n(reading.nitrate, 0)} mg/L de nitrates sur le ruisseau des champs.`;
+		return `La source, en forêt : ${n(reading.nitrate, 0)} mg/L. L’amont est encore calme.`;
+	});
 
 	function take() {
 		log = [
 			{ place: place.name, weather: weatherLabel, nitrate: reading.nitrate, turbidity: reading.turbidity },
 			...log
 		].slice(0, 8);
+		if (weather === 'epandage' && place.id === 'champ' && reading.nitrate > NITRATE_REFERENCE_MG_L) {
+			flaque.solve('ruisseau');
+		}
 	}
 </script>
 
@@ -30,8 +51,11 @@
 			<p class="mark">Module · sans quiz</p>
 			<h1>Prélèvement</h1>
 			<ProjectSwitch current="modules" />
+			<HeroChip />
 		</div>
 	</header>
+
+	<RoleAlert speaker="Noé Berges" role="Garde du bassin" line={alertLine} />
 
 	<div class="weather" role="group" aria-label="Météo du bassin">
 		{#each [
@@ -49,19 +73,21 @@
 		<div class="catchment">
 			<svg viewBox="0 0 820 460" aria-hidden="true">
 				<rect width="820" height="460" fill="#07161c" rx="16" />
-				<path d="M90 90 C180 140 200 200 250 230 C300 250 360 250 430 290 C520 340 600 340 760 360" fill="none" stroke="#1d6d8a" stroke-width="16" stroke-linecap="round" />
-				<path d="M250 230 C340 180 400 160 470 160" fill="none" stroke="#1d6d8a" stroke-width="10" stroke-linecap="round" />
+				<path d="M40 230 L480 270" fill="none" stroke="#1d6d8a" stroke-width="12" stroke-linecap="round" />
+				<path d="M120 40 L280 120 L480 270" fill="none" stroke="#1d6d8a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+				<path d="M480 270 L640 370 L780 444" fill="none" stroke="#1d6d8a" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
 			</svg>
 			{#each PLACES as item (item.id)}
 				<button
 					type="button"
 					class="sample-point"
+					data-side={item.side}
 					style:left="{(item.x / 820) * 100}%"
 					style:top="{(item.y / 460) * 100}%"
 					aria-pressed={selected === item.id}
 					onclick={() => (selected = item.id)}
 				>
-					{item.name}
+					<span class="sample-name">{item.name}</span>
 				</button>
 			{/each}
 		</div>
@@ -91,7 +117,11 @@
 					{/each}
 				</ul>
 			{/if}
-			<p class="disclaimer">Un seul point ne décrit pas le bassin. La pluie augmente ici la turbidité et dilue les nitrates. L’épandage relève les nitrates du ruisseau agricole.</p>
+			<p class="enigma-line">
+				{enigma?.ask}
+				{flaque.save.solved.includes('ruisseau') ? ` Objet : ${enigma?.itemName}.` : ''}
+			</p>
+			<p class="disclaimer">Un seul point ne décrit pas le bassin. La pluie augmente ici la turbidité et dilue les nitrates. L’épandage relève les nitrates du ruisseau des champs.</p>
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
 	</div>

@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import HeroChip from '$lib/components/HeroChip.svelte';
+	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Slider from '$lib/components/Slider.svelte';
+	import { ENIGMAS } from '$lib/game/flaque';
+	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
 	import {
 		CALCITE_KS,
@@ -24,6 +28,8 @@
 	let fe3 = $state(1);
 	let o2 = $state(0.21);
 	let ph = $state(7);
+	let armed = $state(false);
+	let watched = $state<'denit' | 'calcite' | 'fer'>('denit');
 
 	const qr = $derived.by(() => {
 		if (activity === 'denit') return qrDenitrification(no3 / 1000, n2, hco3 / 1000, co2 / 1000);
@@ -42,6 +48,15 @@
 			: activity === 'calcite'
 				? { left: 'CaCO₃(s)', right: 'Ca²⁺, CO₃²⁻' }
 				: { left: 'Fe²⁺, O₂, H⁺', right: 'Fe³⁺' }
+	);
+	const bascule = ENIGMAS.find((enigma) => enigma.id === 'bascule');
+	const reactionName = $derived(activity === 'denit' ? 'La dénitrification' : activity === 'calcite' ? 'La calcite' : 'Le fer dissous');
+	const alertLine = $derived(
+		reading.sense === 'equilibre'
+			? `${reactionName} : Q et K se tiennent. ΔᵣG vaut ${n(reading.deltaGkj, 1)} kJ/mol. La réaction est à l’équilibre.`
+			: reading.sense === 'direct'
+				? `${reactionName} : les produits sont plus bas. ΔᵣG vaut ${n(reading.deltaGkj, 1)} kJ/mol. Le sens écrit est favorisé. Le signe ne dit pas la vitesse, ni que l’eau est potable.`
+				: `${reactionName} : les réactifs sont plus bas. ΔᵣG vaut ${n(reading.deltaGkj, 1)} kJ/mol. Le sens inverse est favorisé.`
 	);
 	const senseText = $derived(
 		reading.sense === 'direct'
@@ -65,6 +80,16 @@
 		'9': '⁹'
 	};
 
+	$effect(() => {
+		if (activity !== watched) {
+			watched = activity;
+			armed = reading.sense === 'direct';
+			return;
+		}
+		if (reading.sense === 'direct') armed = true;
+		if (armed && reading.sense === 'inverse') flaque.solve('bascule');
+	});
+
 	function sci(value: number) {
 		if (!Number.isFinite(value) || value <= 0) return '—';
 		const exp = Math.floor(Math.log10(value));
@@ -85,8 +110,11 @@
 			<p class="mark">Module · sans quiz</p>
 			<h1>Énergie de Gibbs</h1>
 			<ProjectSwitch current="modules" />
+			<HeroChip />
 		</div>
 	</header>
+
+	<RoleAlert speaker="Irma Quotient" role="Chimiste de garde" line={alertLine} />
 
 	<div class="weather" role="group" aria-label="Réaction">
 		<button type="button" class="ghost" aria-pressed={activity === 'denit'} onclick={() => (activity = 'denit')}>Dénitrification</button>
@@ -170,6 +198,10 @@
 				<div><dt>K</dt><dd>{sci(k)}</dd></div>
 				<div><dt>ΔᵣG</dt><dd>{n(reading.deltaGkj, 1)} kJ/mol</dd></div>
 			</dl>
+			<p class="enigma-line">
+				{bascule?.ask}
+				{flaque.save.solved.includes('bascule') ? ` Objet : ${bascule?.itemName}.` : ''}
+			</p>
 			<p class="disclaimer">ΔᵣG = RT ln(Q/K). Le signe dit le sens favorisé. Il ne dit pas la vitesse, ni que l’eau est potable.</p>
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
