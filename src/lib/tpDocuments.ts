@@ -28,6 +28,18 @@ export const tpDocuments: TpDocument[] = [
 		href: '/documents-tp/2de-Aqua-TP2.pdf'
 	},
 	{
+		title: 'Première CGEA — Analyser les dépenses d’une exploitation agricole',
+		detail:
+			'Trier et filtrer le journal des dépenses, repérer des coûts compressibles et préparer un budget prévisionnel 2026. Fiche PDF. Données fictives.',
+		href: '/documents-tp/tp-1-CGEA-2.pdf'
+	},
+	{
+		title: 'Classeur — comptabilité d’une exploitation agricole',
+		detail:
+			'Fichier du TP Première CGEA, à ouvrir dans LibreOffice Calc. La fiche demande ce nom : TP_comptabilite_exploitation_agricole.xlsx.',
+		href: '/documents-tp/TP_comptabilite_exploitation_agricole.xlsx'
+	},
+	{
 		title: 'Première STAV — pH de la Gartempe, Calc',
 		detail:
 			'Étudier le pH réel de la Gartempe dans LibreOffice Calc : import CSV, indicateurs et graphiques. Fiche PDF.',
