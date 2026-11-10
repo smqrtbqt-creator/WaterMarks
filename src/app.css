@@ -1736,3 +1736,137 @@ dialog .primary {
 		animation: none;
 	}
 }
+
+.modules .lede {
+	color: var(--muted);
+	max-width: 40rem;
+}
+
+.module-grid {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 0.8rem;
+}
+
+.module-grid a {
+	display: grid;
+	gap: 0.35rem;
+	min-height: 11rem;
+	padding: 1rem;
+	border-radius: 16px;
+	border: 1px solid var(--line);
+	background: rgba(13, 33, 41, 0.78);
+	color: var(--ink);
+	text-decoration: none;
+}
+
+.module-grid span {
+	color: var(--accent);
+	font-family: 'IBM Plex Mono', ui-monospace, monospace;
+	font-size: 0.75rem;
+}
+
+.module-grid p {
+	color: var(--muted);
+	margin: 0;
+}
+
+.module-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.8fr);
+	gap: 1rem;
+	align-items: start;
+}
+
+.pump-svg,
+.catchment svg {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.module-panel {
+	display: grid;
+	gap: 0.7rem;
+	padding: 0.9rem 1rem;
+	border-radius: 16px;
+	border: 1px solid var(--line);
+	background: rgba(13, 33, 41, 0.78);
+}
+
+.module-panel h2,
+.module-panel p {
+	margin: 0;
+}
+
+.weather {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.catchment {
+	position: relative;
+}
+
+.sample-point {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	max-width: 9rem;
+	text-align: left;
+	font-size: 0.82rem;
+}
+
+.sample-point[aria-pressed='true'] {
+	border-color: var(--accent);
+	background: rgba(223, 245, 106, 0.16);
+}
+
+.sample-log {
+	margin: 0;
+	padding-left: 1.1rem;
+	color: var(--muted);
+}
+
+.energy {
+	padding: 0.6rem 0.4rem 0.9rem;
+	border-radius: 16px;
+	border: 1px solid var(--line);
+	background: #07161c;
+}
+
+.energy svg {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.energy .sense {
+	margin: 0 0.8rem;
+}
+
+.species-kicker {
+	margin: 0.35rem 0 0;
+	color: var(--faint);
+	font-size: 0.75rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.fixed-species {
+	color: var(--muted);
+}
+
+.eq {
+	font-family: 'IBM Plex Mono', ui-monospace, monospace;
+	color: var(--acid, #8ec8e6);
+}
+
+@media (max-width: 860px) {
+	.module-layout {
+		grid-template-columns: 1fr;
+	}
+}

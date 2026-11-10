@@ -5,6 +5,7 @@
 
 	const links = [
 		{ id: 'tp', href: `${base}/tp`, label: 'TP' },
+		{ id: 'modules', href: `${base}/modules`, label: 'Modules' },
 		{ id: 'home', href: `${base}/`, label: 'Rivière Blanche' },
 		{ id: 'bastide', href: `${base}/bastide`, label: 'La Bastide' },
 		{ id: 'desinfection', href: `${base}/desinfection`, label: 'Désinfection' },
