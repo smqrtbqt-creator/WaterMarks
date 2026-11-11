@@ -908,6 +908,20 @@ dialog .primary {
 	gap: 0.75rem;
 }
 
+.tp-class {
+	margin-top: 1.5rem;
+}
+
+.tp-class h2 {
+	margin: 0 0 0.7rem;
+	font-size: 1.25rem;
+}
+
+.tp-class h3 {
+	margin: 0;
+	font-size: 1.05rem;
+}
+
 .resource-card {
 	display: grid;
 	gap: 0.35rem;
