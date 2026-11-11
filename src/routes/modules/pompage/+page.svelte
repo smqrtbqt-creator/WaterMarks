@@ -38,7 +38,7 @@
 	const hstat = ENIGMAS.find((enigma) => enigma.id === 'hstat');
 
 	$effect(() => {
-		if (flaque.loaded && flaque.save.seenIntro) intro = false;
+		if (flaque.loaded && flaque.seen('pompage')) intro = false;
 	});
 
 	$effect(() => {
@@ -69,7 +69,7 @@
 <div class="app modules">
 	<header class="top">
 		<div class="brand">
-			<p class="mark">Module · sans quiz</p>
+			<p class="mark">Module</p>
 			<h1>Station de pompage</h1>
 			<ProjectSwitch current="modules" />
 			<HeroChip />

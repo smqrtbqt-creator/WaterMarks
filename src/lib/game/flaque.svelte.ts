@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { emptySave, sanitizeSave, solve as applySolve, type EnigmaId, type Save } from './flaque';
+import { emptySave, sanitizeSave, solve as applySolve, type EnigmaId, type IntroId, type Save } from './flaque';
 
 const KEY = 'watermarks-flaque-v1';
 
@@ -34,9 +34,17 @@ class Flaque {
 		return true;
 	}
 
-	seeIntro() {
-		if (this.save.seenIntro) return;
-		this.save = { ...this.save, seenIntro: true };
+	seen(id: IntroId) {
+		return this.save.seen.includes(id);
+	}
+
+	seeIntro(id: IntroId = 'pompage') {
+		if (this.save.seen.includes(id)) return;
+		this.save = {
+			...this.save,
+			seen: [...this.save.seen, id],
+			seenIntro: id === 'pompage' || this.save.seenIntro
+		};
 		this.persist();
 	}
 }

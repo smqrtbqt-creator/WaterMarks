@@ -82,24 +82,32 @@ export const HP_PER_LEVEL = 12;
 /** Deux coups par seconde : le bouton de l’arène reprend après 500 ms. */
 export const CLICKS_PER_SEC = 2;
 
+export type IntroId = 'pompage' | 'bassin' | 'gibbs';
+
 export type Save = {
 	solved: EnigmaId[];
 	seenIntro: boolean;
+	seen: IntroId[];
 };
 
 const KNOWN = new Set(ENIGMAS.map((enigma) => enigma.id));
+const INTROS = new Set<IntroId>(['pompage', 'bassin', 'gibbs']);
 
 export function emptySave(): Save {
-	return { solved: [], seenIntro: false };
+	return { solved: [], seenIntro: false, seen: [] };
 }
 
 export function sanitizeSave(value: unknown): Save {
 	if (!value || typeof value !== 'object') return emptySave();
-	const raw = value as { solved?: unknown; seenIntro?: unknown };
+	const raw = value as { solved?: unknown; seenIntro?: unknown; seen?: unknown };
 	const solved = Array.isArray(raw.solved)
 		? raw.solved.filter((id): id is EnigmaId => typeof id === 'string' && KNOWN.has(id as EnigmaId))
 		: [];
-	return { solved: [...new Set(solved)], seenIntro: raw.seenIntro === true };
+	const seen = Array.isArray(raw.seen)
+		? raw.seen.filter((id): id is IntroId => typeof id === 'string' && INTROS.has(id as IntroId))
+		: [];
+	if (raw.seenIntro === true && !seen.includes('pompage')) seen.push('pompage');
+	return { solved: [...new Set(solved)], seenIntro: raw.seenIntro === true || seen.includes('pompage'), seen: [...new Set(seen)] };
 }
 
 export function levelOf(save: Save): number {

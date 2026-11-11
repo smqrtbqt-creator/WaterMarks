@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import Cinematic from '$lib/components/Cinematic.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
@@ -11,6 +12,7 @@
 	let weather = $state<WeatherId>('sec');
 	let selected = $state<PlaceId>('confluence');
 	let log = $state<{ place: string; weather: string; nitrate: number; turbidity: number }[]>([]);
+	let intro = $state(true);
 
 	const place = $derived(PLACES.find((item) => item.id === selected) ?? PLACES[0]);
 	const reading = $derived(sample(place, weather));
@@ -30,6 +32,15 @@
 		return `La source, en forêt : ${n(reading.nitrate, 0)} mg/L. L’amont est encore calme.`;
 	});
 
+	$effect(() => {
+		if (flaque.loaded && flaque.seen('bassin')) intro = false;
+	});
+
+	function closeIntro() {
+		flaque.seeIntro('bassin');
+		intro = false;
+	}
+
 	function take() {
 		log = [
 			{ place: place.name, weather: weatherLabel, nitrate: reading.nitrate, turbidity: reading.turbidity },
@@ -48,12 +59,23 @@
 <div class="app modules">
 	<header class="top">
 		<div class="brand">
-			<p class="mark">Module · sans quiz</p>
+			<p class="mark">Module</p>
 			<h1>Prélèvement</h1>
 			<ProjectSwitch current="modules" />
 			<HeroChip />
 		</div>
 	</header>
+
+	{#if intro}
+		<Cinematic
+			cast="noe"
+			speaker="Noé Berges"
+			role="Garde du bassin"
+			line="Deux cours d’eau, pas plus. À gauche, un seul trait : le ruisseau des champs. L’autre descend de la source. Ils se rencontrent exactement à la confluence, et le point aval est le plus bas du dessin. La pluie trouble et dilue. L’épandage charge le ruisseau des champs."
+			action="Je prélève"
+			onclose={closeIntro}
+		/>
+	{/if}
 
 	<RoleAlert speaker="Noé Berges" role="Garde du bassin" line={alertLine} />
 

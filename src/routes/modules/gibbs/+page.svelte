@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import Cinematic from '$lib/components/Cinematic.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
@@ -28,6 +29,7 @@
 	let fe3 = $state(1);
 	let o2 = $state(0.21);
 	let ph = $state(7);
+	let intro = $state(true);
 	let armed = $state(false);
 	let watched = $state<'denit' | 'calcite' | 'fer'>('denit');
 
@@ -81,6 +83,15 @@
 	};
 
 	$effect(() => {
+		if (flaque.loaded && flaque.seen('gibbs')) intro = false;
+	});
+
+	function closeIntro() {
+		flaque.seeIntro('gibbs');
+		intro = false;
+	}
+
+	$effect(() => {
 		if (activity !== watched) {
 			watched = activity;
 			armed = reading.sense === 'direct';
@@ -107,12 +118,23 @@
 <div class="app modules">
 	<header class="top">
 		<div class="brand">
-			<p class="mark">Module · sans quiz</p>
+			<p class="mark">Module</p>
 			<h1>Énergie de Gibbs</h1>
 			<ProjectSwitch current="modules" />
 			<HeroChip />
 		</div>
 	</header>
+
+	{#if intro}
+		<Cinematic
+			cast="irma"
+			speaker="Irma Quotient"
+			role="Chimiste de garde"
+			line="Regarde qui est le plus bas. Produits plus bas : ΔᵣG est négatif, le sens écrit est favorisé. Réactifs plus bas : le sens inverse gagne. Le K de la dénitrification et celui du fer sont ceux de l’activité. Pour la calcite, 3,3×10⁻⁹ est l’ordre de grandeur à 25 °C, sans force ionique. Le signe ne dit pas la vitesse, ni que l’eau est potable."
+			action="Je lis la balance"
+			onclose={closeIntro}
+		/>
+	{/if}
 
 	<RoleAlert speaker="Irma Quotient" role="Chimiste de garde" line={alertLine} />
 
