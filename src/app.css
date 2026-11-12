@@ -922,6 +922,50 @@ dialog .primary {
 	font-size: 1.05rem;
 }
 
+.gemeau-part {
+	margin-top: 1.1rem;
+	padding: 1rem 1.1rem 1.15rem;
+	border: 1px solid var(--line);
+	border-radius: 16px;
+	background: rgba(13, 33, 41, 0.78);
+}
+
+.gemeau-part h2 {
+	margin: 0;
+	font-size: 1.25rem;
+}
+
+.gemeau-part ul {
+	margin: 0.7rem 0 0;
+	padding-left: 1.2rem;
+	display: grid;
+	gap: 0.35rem;
+}
+
+.gemeau-doc {
+	margin-top: 0.9rem;
+	padding-top: 0.85rem;
+	border-top: 1px solid var(--line);
+	display: grid;
+	gap: 0.35rem;
+	justify-items: start;
+}
+
+.gemeau-doc h3 {
+	margin: 0;
+	font-size: 1.05rem;
+}
+
+.gemeau-doc p {
+	margin: 0;
+}
+
+.gemeau-doc a.primary {
+	display: inline-block;
+	margin-top: 0.2rem;
+	text-decoration: none;
+}
+
 .resource-card {
 	display: grid;
 	gap: 0.35rem;

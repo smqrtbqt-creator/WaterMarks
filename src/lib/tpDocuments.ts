@@ -4,6 +4,8 @@
  * puis copier un bloc dans la classe correspondante.
  * L’adresse est /documents-tp/nom-du-fichier.
  */
+import { gemeauDocs } from '$lib/gemeau';
+
 export type TpDocument = {
 	classe: string;
 	title: string;
@@ -98,6 +100,19 @@ export const tpDocuments: TpDocument[] = [
 			'Étudier le pH réel de la Gartempe dans LibreOffice Calc : import CSV, indicateurs et graphiques. Fiche PDF.',
 		href: '/documents-tp/TP_pH_Gartempe_Calc_corrige-5.pdf'
 	},
+	{
+		classe: 'BTSA GEMEAU',
+		title: '1re année — qualité de l’eau, chimie, pollution, instrumentation',
+		detail:
+			'Page du programme : paramètres physico-chimiques, solutions aqueuses, transfert des polluants et appareils de mesure. Les cours et activités sont rangés sur cette page.',
+		href: '/gemeau'
+	},
+	...gemeauDocs.map((doc) => ({
+		classe: 'BTSA GEMEAU',
+		title: doc.title,
+		detail: doc.detail,
+		href: doc.href
+	})),
 	{
 		classe: 'BTSA GEMEAU',
 		title: 'pH de la Gartempe, Calc',
