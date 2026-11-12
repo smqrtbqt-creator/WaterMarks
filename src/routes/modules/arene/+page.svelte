@@ -4,13 +4,17 @@
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import {
+		BARE_DAMAGE,
+		BASE_HP,
 		DEBOUNCE_MS,
 		ENIGMAS,
 		HIT_LINE,
 		MONSTERS,
 		canBeat,
+		canFace,
 		drainPerSec,
 		hpOf,
+		hpRequired,
 		levelOf,
 		strike,
 		type Monster
@@ -18,7 +22,7 @@
 	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
 
-	type Trace = { id: number; side: 'hero' | 'foe'; kind: 'red' | 'green' | 'drop'; x: number; y: number };
+	type Trace = { id: number; side: 'hero' | 'foe'; kind: 'red' | 'green' | 'drop' | 'nick'; x: number; y: number };
 
 	let monsterId = $state(MONSTERS[0].id);
 	let heroHp = $state(0);
@@ -41,9 +45,13 @@
 				? `${monster.name} a éclaté. Goutte est toujours niveau ${levelOf(flaque.save)}. L’arène ne récompense pas.`
 				: outcome === 'lose'
 					? `Goutte est dissoute. Son niveau n’a pas bougé. Les objets forts sont dans les énigmes, pas ici.`
-					: solved === 0
-						? `${monster.name} attend. Sans module, la jauge s’arrête sous le trait. Le coup ne peut pas partir.`
-						: `${monster.name} attend. ${monster.blurb} Tiens la jauge au-dessus du trait. ${canBeat(flaque.save, monster) ? 'En martelant, Goutte peut tenir.' : 'Même à toute vitesse, Goutte fond avant la fin.'}`
+					: !canFace(flaque.save, monster)
+						? `${monster.name} reste à l'écart. Il faut ${hpRequired(monster)} PV, Goutte en a ${hpOf(flaque.save)}. Ces points viennent des modules. Sans eux, elle reste à ${BASE_HP} et n'affronte personne.`
+						: monster.id === 'kraken' && solved < ENIGMAS.length
+						? `Le kraken du réservoir est le dernier. ${solved} énigme${solved === 1 ? '' : 's'} sur ${ENIGMAS.length}. Sans les cinq, il dissout Goutte.`
+						: solved === 0
+							? `${monster.name} attend. Sans module, la jauge s’arrête sous le trait. Le coup ne peut pas partir.`
+							: `${monster.name} attend. ${monster.blurb} ${canBeat(flaque.save, monster) ? 'En martelant, Goutte peut tenir.' : 'Même à toute vitesse, Goutte fond avant la fin.'}`
 	);
 
 	$effect(() => {
@@ -81,7 +89,10 @@
 		} else if (foeHp <= 0) {
 			fighting = false;
 			outcome = 'win';
-			log = `${monster.name} éclate en flaque. Aucun objet. Aucun niveau.`;
+			log =
+				monster.id === 'kraken'
+					? 'Le kraken du réservoir éclate. Les cinq modules étaient nécessaires. Aucun niveau de plus.'
+					: `${monster.name} éclate en flaque. Aucun objet. Aucun niveau.`;
 		}
 	});
 
@@ -97,6 +108,13 @@
 
 	function begin(next: Monster) {
 		monsterId = next.id;
+		if (!canFace(flaque.save, next)) {
+			fighting = false;
+			outcome = 'idle';
+			power = 0;
+			log = `${next.name} demande ${hpRequired(next)} PV. Les modules donnent ces points. Sans eux, Goutte reste à ${BASE_HP}.`;
+			return;
+		}
 		heroHp = hpOf(flaque.save);
 		foeHp = next.hp;
 		fighting = true;
@@ -105,10 +123,7 @@
 		lastClick = 0;
 		bob = 0;
 		traces = [];
-		log =
-			flaque.save.solved.length === 0
-				? 'Martèle. Sans module, la jauge ne peut pas passer le trait.'
-				: 'Martèle pour remplir la jauge. Au-dessus du trait, le coup part.';
+		log = 'Martèle pour remplir la jauge. Au-dessus du trait, le coup part.';
 	}
 
 	function hit() {
@@ -123,7 +138,7 @@
 		mark('hero', 'drop');
 		if (blow.green > 0) {
 			foeHp = Math.max(0, foeHp - blow.green);
-			mark('foe', 'green');
+			mark('foe', blow.green < 1 ? 'nick' : 'green');
 		}
 		if (blow.red > 0) {
 			heroHp = Math.max(0, heroHp - blow.red);
@@ -132,7 +147,7 @@
 		if (!blow.landed) {
 			log =
 				solved === 0
-					? 'La jauge monte, puis s’arrête sous le trait. Le coup ne part pas.'
+					? 'Mains nues. Le coup effleure : très peu de dégâts.'
 					: 'Sous le trait. Martèle plus vite : la jauge retombe dès que tu lâches.';
 		} else if (blow.red > 0) {
 			log = 'Au-dessus du trait. Vert sur le monstre, rouge sur Goutte.';
@@ -173,9 +188,9 @@
 					<strong>{n(outcome === 'idle' ? hpOf(flaque.save) : heroHp, 1)} PV</strong>
 				</button>
 				<div class="arena-foe">
-					<span class="arena-blob" style:transform="scale({0.7 + monster.hp / 280})"></span>
+					<span class="arena-blob" style:transform="scale({0.72 + MONSTERS.indexOf(monster) * 0.12})"></span>
 					{#each traces.filter((trace) => trace.side === 'foe') as trace (trace.id)}
-						<i class="arena-mark green" style:left="{trace.x}%" style:top="{trace.y}%" aria-hidden="true"></i>
+						<i class="arena-mark {trace.kind}" style:left="{trace.x}%" style:top="{trace.y}%" aria-hidden="true"></i>
 					{/each}
 					{monster.name}
 					<strong>{n(outcome === 'idle' ? monster.hp : foeHp, 1)} PV</strong>
@@ -189,8 +204,10 @@
 			<button type="button" class="primary track-mash" disabled={!fighting} onclick={hit}>Martèle</button>
 			<p>{log}</p>
 			<p class="disclaimer">
-				{#if solved === 0}
-					Aucun module résolu : la jauge plafonne sous le trait. Gagner est impossible.
+				{#if !canFace(flaque.save, monster)}
+					Pour l'engager, il faut {hpRequired(monster)} PV. Goutte en a {hpOf(flaque.save)}. Sans module, elle reste à {BASE_HP} et ne prend aucun adversaire.
+				{:else if monster.id === 'kraken' && solved < ENIGMAS.length}
+					Le kraken est le dernier ennemi. Les cinq modules sont nécessaires. Quatre ne suffisent pas.
 				{:else if !canBeat(flaque.save, monster)}
 					Même en martelant sans reprendre souffle, ce monstre dissout Goutte. Il faut d’autres énigmes.
 				{:else}
@@ -203,13 +220,21 @@
 			<h2>Monstres</h2>
 			<div class="weather">
 				{#each MONSTERS as foe (foe.id)}
-					<button type="button" class="ghost" aria-pressed={foe.id === monster.id} onclick={() => begin(foe)}>
+					<button
+						type="button"
+						class="ghost"
+						aria-pressed={foe.id === monster.id}
+						disabled={!canFace(flaque.save, foe)}
+						title={canFace(flaque.save, foe) ? foe.name : `${hpRequired(foe)} PV requis`}
+						onclick={() => begin(foe)}
+					>
 						{foe.name}
 					</button>
 				{/each}
 			</div>
 			<p>
 				{monster.blurb} {monster.atk} dégâts par seconde d’attente, encaissés au clic suivant. {monster.hp} PV.
+				Pour l'engager : {hpRequired(monster)} PV. Goutte en a {hpOf(flaque.save)}.
 			</p>
 			<h2>Objets</h2>
 			<ul class="sample-log">
@@ -222,7 +247,7 @@
 				{/each}
 			</ul>
 			<p>
-				Mains nues : 1 dégât. Martèle pour tenir la jauge au-dessus du trait. Moins il y a de modules, plus elle retombe vite.
+				Sans module : {n(BARE_DAMAGE, 1)} dégât par coup. Avec une énigme, le coup au-dessus du trait porte vraiment. Moins il y a de modules, plus la jauge retombe vite.
 			</p>
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>

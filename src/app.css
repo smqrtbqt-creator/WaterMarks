@@ -2088,6 +2088,13 @@ dialog .primary {
 	box-shadow: 0 0 8px #7dce4a;
 }
 
+.arena-mark.nick {
+	width: 9px;
+	height: 5px;
+	background: #c5e6a8;
+	box-shadow: none;
+}
+
 .arena-mark.drop {
 	width: 12px;
 	height: 16px;

@@ -3,7 +3,7 @@
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
-	import { ENIGMAS, MONSTERS, canBeat } from '$lib/game/flaque';
+	import { ENIGMAS } from '$lib/game/flaque';
 	import { flaque } from '$lib/game/flaque.svelte';
 </script>
 
@@ -28,10 +28,8 @@
 	<p class="lede">
 		Goutte ne gagne un niveau et un objet qu’en résolvant une énigme.
 		Dans l’arène, on tape des monstres d’eau : ça n’offre rien.
-		{#if flaque.save.solved.length === 0}
-			Sans énigme, la jauge reste sous le trait : marteler ne fait pas partir le coup.
-		{:else if !canBeat(flaque.save, MONSTERS[1])}
-			Sans la clé à molette, le canard de bâche dissout Goutte.
+		{#if flaque.save.solved.length < ENIGMAS.length}
+			Le kraken du réservoir est le dernier. Il faut les cinq énigmes, pas une de moins.
 		{/if}
 		{ENIGMAS.filter((enigma) => flaque.save.solved.includes(enigma.id)).length} / {ENIGMAS.length} énigmes résolues.
 	</p>

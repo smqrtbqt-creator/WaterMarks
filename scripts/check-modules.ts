@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { MONSTERS, canBeat, damageOf, emptySave, levelOf, solve } from '../src/lib/game/flaque.ts';
+import { MONSTERS, canBeat, canFace, damageOf, emptySave, levelOf, solve } from '../src/lib/game/flaque.ts';
 import { CALCITE_KS, IRON_K, gibbsReading, qrCalcite, qrDenitrification, qrIron } from '../src/lib/modules/gibbs.ts';
 import { headM, levelAfter, powerKw, pumpFlowM3h } from '../src/lib/modules/pump.ts';
 import { PLACES, sample } from '../src/lib/modules/watershed.ts';
@@ -57,18 +57,31 @@ assert.equal(gibbsReading(ironUi(5, 1, 0.21, 7.4), IRON_K, 15).sense, 'inverse')
 
 let save = emptySave();
 assert.equal(levelOf(save), 1);
-assert.equal(damageOf(save), 1);
+assert.equal(damageOf(save), 0.2);
 assert.equal(canBeat(save, MONSTERS[0]), false);
-assert.equal(canBeat(save, MONSTERS[1]), false);
+assert.equal(canFace(save, MONSTERS[0]), false);
+assert.equal(canBeat(save, MONSTERS[4]), false);
 const once = solve(save, 'bache');
 assert.equal(once.fresh, true);
 assert.equal(solve(once.save, 'bache').fresh, false);
 save = once.save;
 assert.equal(levelOf(save), 2);
-assert.equal(canBeat(save, MONSTERS[1]), true);
+assert.equal(canBeat(save, MONSTERS[0]), true);
+assert.equal(canFace(save, MONSTERS[0]), true);
+assert.equal(canFace(save, MONSTERS[1]), false);
+assert.equal(canBeat(save, MONSTERS[1]), false);
 assert.equal(canBeat(save, MONSTERS[4]), false);
-for (const id of ['hstat', 'ruisseau', 'bascule', 'riviere'] as const) save = solve(save, id).save;
+for (const id of ['hstat', 'ruisseau', 'bascule'] as const) save = solve(save, id).save;
+assert.equal(levelOf(save), 5);
+assert.equal(canBeat(save, MONSTERS[3]), true);
+assert.equal(canBeat(save, MONSTERS[4]), false);
+let strongestFour = emptySave();
+for (const id of ['hstat', 'ruisseau', 'bascule', 'riviere'] as const) strongestFour = solve(strongestFour, id).save;
+assert.equal(canBeat(strongestFour, MONSTERS[4]), false);
+assert.equal(canFace(strongestFour, MONSTERS[4]), false);
+save = solve(save, 'riviere').save;
 assert.equal(levelOf(save), 6);
 assert.equal(canBeat(save, MONSTERS[4]), true);
+assert.equal(canFace(save, MONSTERS[4]), true);
 
 console.log('check-modules: ok');

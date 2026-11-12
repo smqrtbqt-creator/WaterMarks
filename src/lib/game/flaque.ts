@@ -69,14 +69,22 @@ export const ENIGMAS: Enigma[] = [
 ];
 
 export const MONSTERS: Monster[] = [
-	{ id: 'tetard', name: 'Têtard mouillé', hp: 8, atk: 0, blurb: 'Il glisse. Il ne mord pas.' },
-	{ id: 'canard', name: 'Canard de bâche', hp: 30, atk: 3, blurb: 'Il garde le réservoir. Mal.' },
-	{ id: 'nitrate', name: 'Nitrate gluant', hp: 70, atk: 5, blurb: 'Il dépasse 50 et il est fier.' },
-	{ id: 'turbine', name: 'Turbine possédée', hp: 140, atk: 8, blurb: 'Elle tourne à l’envers par principe.' },
-	{ id: 'kraken', name: 'Kraken du réservoir', hp: 280, atk: 10, blurb: 'Il habite la hauteur statique. Enfin, il le croit.' }
+	{ id: 'tetard', name: 'Têtard mouillé', hp: 40, atk: 2, blurb: 'Il glisse. Le premier à tomber, si une énigme est déjà résolue.' },
+	{ id: 'canard', name: 'Canard de bâche', hp: 160, atk: 9, blurb: 'Il garde le réservoir. Deux énigmes commencent à suffire.' },
+	{ id: 'nitrate', name: 'Nitrate gluant', hp: 320, atk: 12, blurb: 'Il dépasse 50 et il colle. Il faut déjà plusieurs énigmes.' },
+	{ id: 'turbine', name: 'Turbine possédée', hp: 560, atk: 15, blurb: 'Elle tourne à l’envers. L’avant-dernier mur avant le réservoir.' },
+	{
+		id: 'kraken',
+		name: 'Kraken du réservoir',
+		hp: 840,
+		atk: 18,
+		blurb: 'Le dernier. Sans les cinq énigmes, il dissout Goutte avant la fin.'
+	}
 ];
 
 export const BASE_DAMAGE = 1;
+/** Mains nues, aucun module : le coup effleure. */
+export const BARE_DAMAGE = 0.2;
 export const BASE_HP = 14;
 export const HP_PER_LEVEL = 12;
 /** Au-dessus de ce trait, le coup part. */
@@ -146,11 +154,22 @@ export function owned(save: Save): Enigma[] {
 }
 
 export function damageOf(save: Save): number {
+	if (save.solved.length === 0) return BARE_DAMAGE;
 	return BASE_DAMAGE + owned(save).reduce((sum, enigma) => sum + enigma.bonus, 0);
 }
 
 export function hpOf(save: Save): number {
 	return BASE_HP + (levelOf(save) - 1) * HP_PER_LEVEL;
+}
+
+/** Chaque monstre demande les PV d'un module de plus. Sans module, personne n'est accessible. */
+export function hpRequired(monster: Monster): number {
+	const rank = Math.max(0, MONSTERS.findIndex((item) => item.id === monster.id));
+	return BASE_HP + (rank + 1) * HP_PER_LEVEL;
+}
+
+export function canFace(save: Save, monster: Monster): boolean {
+	return hpOf(save) >= hpRequired(monster);
 }
 
 export function solve(save: Save, id: EnigmaId): { save: Save; fresh: boolean } {
@@ -171,11 +190,11 @@ export function strike(save: Save, monster: Monster, gapMs: number, power: numbe
 	const next = pumpGauge(drained, solved);
 	const landed = next >= HIT_LINE;
 	const red = opening ? 0 : monster.atk * (Math.max(gapMs, RED_FLOOR_MS) / 1000);
-	return { landed, green: landed ? damageOf(save) : 0, red, power: next };
+	const green = landed ? damageOf(save) : solved === 0 ? BARE_DAMAGE : 0;
+	return { landed, green, red, power: next };
 }
 
 export function damageTaken(save: Save, monster: Monster): number {
-	if (powerCap(save.solved.length) < HIT_LINE) return Number.POSITIVE_INFINITY;
 	const green = damageOf(save);
 	if (green <= 0) return Number.POSITIVE_INFINITY;
 	let power = 0;
