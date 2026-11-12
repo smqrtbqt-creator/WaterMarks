@@ -17,8 +17,12 @@ export type Monster = {
 	name: string;
 	hp: number;
 	atk: number;
+	/** Nombre de modules requis pour l'engager. */
+	need: number;
 	blurb: string;
 };
+
+export const HERO_NAME = 'Têtard mouillé';
 
 export const ENIGMAS: Enigma[] = [
 	{
@@ -69,16 +73,37 @@ export const ENIGMAS: Enigma[] = [
 ];
 
 export const MONSTERS: Monster[] = [
-	{ id: 'tetard', name: 'Têtard mouillé', hp: 40, atk: 2, blurb: 'Il glisse. Le premier à tomber, si une énigme est déjà résolue.' },
-	{ id: 'canard', name: 'Canard de bâche', hp: 160, atk: 9, blurb: 'Il garde le réservoir. Deux énigmes commencent à suffire.' },
-	{ id: 'nitrate', name: 'Nitrate gluant', hp: 320, atk: 12, blurb: 'Il dépasse 50 et il colle. Il faut déjà plusieurs énigmes.' },
-	{ id: 'turbine', name: 'Turbine possédée', hp: 560, atk: 15, blurb: 'Elle tourne à l’envers. L’avant-dernier mur avant le réservoir.' },
+	{
+		id: 'canard',
+		name: 'Canard de bâche',
+		hp: 120,
+		atk: 7,
+		need: 1,
+		blurb: 'Il garde le réservoir. Une énigme ouvre le combat. Taper vite pèse plus lourd.'
+	},
+	{
+		id: 'nitrate',
+		name: 'Nitrate gluant',
+		hp: 300,
+		atk: 12,
+		need: 2,
+		blurb: 'Il dépasse 50 et il colle. Deux énigmes pour l’engager.'
+	},
+	{
+		id: 'turbine',
+		name: 'Turbine possédée',
+		hp: 540,
+		atk: 15,
+		need: 4,
+		blurb: 'Elle tourne à l’envers. Quatre énigmes pour l’engager.'
+	},
 	{
 		id: 'kraken',
 		name: 'Kraken du réservoir',
-		hp: 840,
-		atk: 18,
-		blurb: 'Le dernier. Sans les cinq énigmes, il dissout Goutte avant la fin.'
+		hp: 1920,
+		atk: 36,
+		need: 5,
+		blurb: 'Le dernier. Les cinq énigmes sont nécessaires pour l’engager.'
 	}
 ];
 
@@ -91,8 +116,6 @@ export const HP_PER_LEVEL = 12;
 export const HIT_LINE = 62;
 /** Deux clics plus serrés que ça comptent pour un seul, pour laisser marteler sans compter deux fois le même appui. */
 export const DEBOUNCE_MS = 80;
-/** Même en martelant au plus vite, chaque coup suivant paie au moins ce temps-là. */
-export const RED_FLOOR_MS = 180;
 
 /** Hauteur ajoutée à la jauge par un clic. */
 export function pumpOf(solved: number): number {
@@ -162,10 +185,19 @@ export function hpOf(save: Save): number {
 	return BASE_HP + (levelOf(save) - 1) * HP_PER_LEVEL;
 }
 
-/** Chaque monstre demande les PV d'un module de plus. Sans module, personne n'est accessible. */
+/** Les PV demandés viennent des modules. Sans module, le têtard reste à 14 et n'engage personne. */
 export function hpRequired(monster: Monster): number {
-	const rank = Math.max(0, MONSTERS.findIndex((item) => item.id === monster.id));
-	return BASE_HP + (rank + 1) * HP_PER_LEVEL;
+	return BASE_HP + monster.need * HP_PER_LEVEL;
+}
+
+/**
+ * Plus le clic suit de près le précédent, plus le coup pèse.
+ * Au rythme le plus serré, le facteur vaut 2. Un clic lent tombe vers 0,4.
+ */
+export function tempoOf(gapMs: number): number {
+	if (gapMs <= 0) return 1;
+	const tempo = 320 / Math.max(gapMs, DEBOUNCE_MS);
+	return Math.min(2, Math.max(0.4, tempo));
 }
 
 export function canFace(save: Save, monster: Monster): boolean {
@@ -189,8 +221,9 @@ export function strike(save: Save, monster: Monster, gapMs: number, power: numbe
 	const drained = opening || live ? power : drainGauge(power, solved, gapMs);
 	const next = pumpGauge(drained, solved);
 	const landed = next >= HIT_LINE;
-	const red = opening ? 0 : monster.atk * (Math.max(gapMs, RED_FLOOR_MS) / 1000);
-	const green = landed ? damageOf(save) : solved === 0 ? BARE_DAMAGE : 0;
+	const red = opening ? 0 : monster.atk * (gapMs / 1000);
+	const base = landed ? damageOf(save) : solved === 0 ? BARE_DAMAGE : 0;
+	const green = base * (opening ? 1 : tempoOf(gapMs));
 	return { landed, green, red, power: next };
 }
 
@@ -209,7 +242,7 @@ export function damageTaken(save: Save, monster: Monster): number {
 	return foe <= 0 ? red : Number.POSITIVE_INFINITY;
 }
 
-/** Vrai si, en cliquant au plus vite, Goutte abat le monstre avant d’être dissoute. */
+/** Vrai si, en tapant au plus vite, le têtard abat le monstre avant d’être dissous. */
 export function canBeat(save: Save, monster: Monster): boolean {
 	return damageTaken(save, monster) < hpOf(save);
 }

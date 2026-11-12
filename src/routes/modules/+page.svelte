@@ -21,13 +21,13 @@
 		</div>
 	</header>
 	<RoleAlert
-		speaker="Goutte"
+		speaker="Têtard mouillé"
 		role="Héros de la flaque"
-		line="Marceline crie à la bâche, Noé garde le bassin, Irma lit Q et K, Sifflard arbitre les monstres. Je ne monte d’un niveau que si l’énigme est vraie."
+		line="Marceline crie à la bâche, Noé garde le bassin, Irma lit Q et K, Sifflard arbitre les monstres. Je ne monte d’un niveau que si l’énigme est vraie, et ça reste enregistré."
 	/>
 	<p class="lede">
-		Goutte ne gagne un niveau et un objet qu’en résolvant une énigme.
-		Dans l’arène, on tape des monstres d’eau : ça n’offre rien.
+		Le têtard mouillé ne gagne un niveau et un objet qu’en résolvant une énigme.
+		Dans l’arène, on tape des monstres d’eau : ça n’offre rien. Plus on tape vite, plus le coup pèse.
 		{#if flaque.save.solved.length < ENIGMAS.length}
 			Le kraken du réservoir est le dernier. Il faut les cinq énigmes, pas une de moins.
 		{/if}
@@ -59,7 +59,7 @@
 			<a href="{base}/modules/arene">
 				<span>04</span>
 				<strong>Arène de la flaque</strong>
-				<p>Des monstres de plus en plus pénibles. Les coups ne font pas monter Goutte.</p>
+				<p>Des monstres de plus en plus pénibles. Les coups ne font pas monter le têtard.</p>
 			</a>
 		</li>
 	</ul>

@@ -8,6 +8,7 @@
 		BASE_HP,
 		DEBOUNCE_MS,
 		ENIGMAS,
+		HERO_NAME,
 		HIT_LINE,
 		MONSTERS,
 		canBeat,
@@ -40,18 +41,18 @@
 	const solved = $derived(flaque.save.solved.length);
 	const alertLine = $derived(
 		outcome === 'fight'
-			? `Goutte martèle ${monster.name}. Jauge ${n(power, 0)}. ${n(heroHp, 1)} PV contre ${n(foeHp, 1)}. Elle ne perd des points que pendant un clic.`
+			? `Le têtard martèle ${monster.name}. Jauge ${n(power, 0)}. ${n(heroHp, 1)} PV contre ${n(foeHp, 1)}. Plus c’est serré, plus le coup pèse. Il ne perd des points que pendant un clic.`
 			: outcome === 'win'
-				? `${monster.name} a éclaté. Goutte est toujours niveau ${levelOf(flaque.save)}. L’arène ne récompense pas.`
+				? `${monster.name} a éclaté. Le têtard est toujours niveau ${levelOf(flaque.save)}. L’arène ne récompense pas.`
 				: outcome === 'lose'
-					? `Goutte est dissoute. Son niveau n’a pas bougé. Les objets forts sont dans les énigmes, pas ici.`
+					? `Le têtard est dissous. Son niveau n’a pas bougé. Les objets forts sont dans les énigmes, pas ici.`
 					: !canFace(flaque.save, monster)
-						? `${monster.name} reste à l'écart. Il faut ${hpRequired(monster)} PV, Goutte en a ${hpOf(flaque.save)}. Ces points viennent des modules. Sans eux, elle reste à ${BASE_HP} et n'affronte personne.`
+						? `${monster.name} reste à l'écart. Il faut ${hpRequired(monster)} PV, le têtard en a ${hpOf(flaque.save)}. Ces points viennent des modules. Sans eux, il reste à ${BASE_HP} et n'affronte personne.`
 						: monster.id === 'kraken' && solved < ENIGMAS.length
-						? `Le kraken du réservoir est le dernier. ${solved} énigme${solved === 1 ? '' : 's'} sur ${ENIGMAS.length}. Sans les cinq, il dissout Goutte.`
+						? `Le kraken du réservoir est le dernier. ${solved} énigme${solved === 1 ? '' : 's'} sur ${ENIGMAS.length}. Sans les cinq, il dissout le têtard.`
 						: solved === 0
-							? `${monster.name} attend. Sans module, la jauge s’arrête sous le trait. Le coup ne peut pas partir.`
-							: `${monster.name} attend. ${monster.blurb} ${canBeat(flaque.save, monster) ? 'En martelant, Goutte peut tenir.' : 'Même à toute vitesse, Goutte fond avant la fin.'}`
+							? `${monster.name} attend. Sans module, la jauge s’arrête sous le trait.`
+							: `${monster.name} attend. ${monster.blurb} ${canBeat(flaque.save, monster) ? 'En tapant vite, le têtard peut tenir.' : 'Même à toute vitesse, le têtard fond avant la fin.'}`
 	);
 
 	$effect(() => {
@@ -82,17 +83,17 @@
 
 	$effect(() => {
 		if (!fighting) return;
-		if (heroHp <= 0) {
-			fighting = false;
-			outcome = 'lose';
-			log = `${monster.name} dissout Goutte. Son niveau n’a pas bougé.`;
-		} else if (foeHp <= 0) {
+		if (foeHp <= 0) {
 			fighting = false;
 			outcome = 'win';
 			log =
 				monster.id === 'kraken'
-					? 'Le kraken du réservoir éclate. Les cinq modules étaient nécessaires. Aucun niveau de plus.'
-					: `${monster.name} éclate en flaque. Aucun objet. Aucun niveau.`;
+					? 'Le rythme serré a porté. Le kraken du réservoir éclate. Les cinq modules étaient nécessaires. Aucun niveau de plus.'
+					: `Le rythme serré a porté. ${monster.name} éclate en flaque. Aucun objet. Aucun niveau.`;
+		} else if (heroHp <= 0) {
+			fighting = false;
+			outcome = 'lose';
+			log = `Le rythme n’a pas suffi. ${monster.name} dissout le têtard. Son niveau n’a pas bougé.`;
 		}
 	});
 
@@ -112,7 +113,7 @@
 			fighting = false;
 			outcome = 'idle';
 			power = 0;
-			log = `${next.name} demande ${hpRequired(next)} PV. Les modules donnent ces points. Sans eux, Goutte reste à ${BASE_HP}.`;
+			log = `${next.name} demande ${hpRequired(next)} PV. Les modules donnent ces points. Sans eux, le têtard reste à ${BASE_HP}.`;
 			return;
 		}
 		heroHp = hpOf(flaque.save);
@@ -150,9 +151,9 @@
 					? 'Mains nues. Le coup effleure : très peu de dégâts.'
 					: 'Sous le trait. Martèle plus vite : la jauge retombe dès que tu lâches.';
 		} else if (blow.red > 0) {
-			log = 'Au-dessus du trait. Vert sur le monstre, rouge sur Goutte.';
+			log = 'Au-dessus du trait. Plus le clic est serré, plus le vert pèse. Le rouge est sur le têtard.';
 		} else {
-			log = 'La jauge grimpe. Goutte n’encaisse rien tant que le clic suivant n’est pas là.';
+			log = 'La jauge grimpe. Le têtard n’encaisse rien tant que le clic suivant n’est pas là.';
 		}
 	}
 </script>
@@ -184,7 +185,7 @@
 					{#each traces.filter((trace) => trace.side === 'hero') as trace (trace.id)}
 						<i class="arena-mark {trace.kind}" style:left="{trace.x}%" style:top="{trace.y}%" aria-hidden="true"></i>
 					{/each}
-					Goutte
+					{HERO_NAME}
 					<strong>{n(outcome === 'idle' ? hpOf(flaque.save) : heroHp, 1)} PV</strong>
 				</button>
 				<div class="arena-foe">
@@ -205,13 +206,13 @@
 			<p>{log}</p>
 			<p class="disclaimer">
 				{#if !canFace(flaque.save, monster)}
-					Pour l'engager, il faut {hpRequired(monster)} PV. Goutte en a {hpOf(flaque.save)}. Sans module, elle reste à {BASE_HP} et ne prend aucun adversaire.
+					Pour l'engager, il faut {hpRequired(monster)} PV. Le têtard en a {hpOf(flaque.save)}. Sans module, il reste à {BASE_HP} et ne prend aucun adversaire.
 				{:else if monster.id === 'kraken' && solved < ENIGMAS.length}
 					Le kraken est le dernier ennemi. Les cinq modules sont nécessaires. Quatre ne suffisent pas.
 				{:else if !canBeat(flaque.save, monster)}
-					Même en martelant sans reprendre souffle, ce monstre dissout Goutte. Il faut d’autres énigmes.
+					Même en tapant au plus vite, ce monstre dissout le têtard. Il faut d’autres énigmes.
 				{:else}
-					Avec {solved} module{solved > 1 ? 's' : ''}, la jauge retombe moins vite. Le combat ne fait pas monter Goutte.
+					Avec {solved} module{solved > 1 ? 's' : ''}, la jauge retombe moins vite. Taper vite augmente les dégâts. Le combat ne fait pas monter le têtard.
 				{/if}
 			</p>
 		</div>
@@ -234,7 +235,7 @@
 			</div>
 			<p>
 				{monster.blurb} {monster.atk} dégâts par seconde d’attente, encaissés au clic suivant. {monster.hp} PV.
-				Pour l'engager : {hpRequired(monster)} PV. Goutte en a {hpOf(flaque.save)}.
+				Pour l'engager : {hpRequired(monster)} PV. Le têtard en a {hpOf(flaque.save)}.
 			</p>
 			<h2>Objets</h2>
 			<ul class="sample-log">
@@ -247,9 +248,24 @@
 				{/each}
 			</ul>
 			<p>
-				Sans module : {n(BARE_DAMAGE, 1)} dégât par coup. Avec une énigme, le coup au-dessus du trait porte vraiment. Moins il y a de modules, plus la jauge retombe vite.
+				Sans module : {n(BARE_DAMAGE, 1)} dégât, un peu plus si le clic est serré. Une énigme validée reste enregistrée sur cet appareil et débloque les PV, le coup, et l’adversaire suivant.
 			</p>
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
 	</div>
+
+	{#if outcome === 'win' || outcome === 'lose'}
+		<div class="cinematic" role="dialog" aria-modal="true" aria-labelledby="fight-result">
+			<div class="cinematic-card result-card">
+				<p class="mark">Arène</p>
+				<h2 id="fight-result">{outcome === 'win' ? 'Victoire' : 'Échec'}</h2>
+				<p>{log}</p>
+				<p>
+					{solved} énigme{solved === 1 ? '' : 's'} sur {ENIGMAS.length} restent acquises.
+					Le têtard a {hpOf(flaque.save)} PV. Le combat n’en ajoute pas.
+				</p>
+				<button type="button" class="primary" onclick={() => (outcome = 'idle')}>Continuer</button>
+			</div>
+		</div>
+	{/if}
 </div>

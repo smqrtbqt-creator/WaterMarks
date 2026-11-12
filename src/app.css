@@ -1989,6 +1989,11 @@ dialog .primary {
 	max-width: 46rem;
 }
 
+.cinematic-card.result-card {
+	grid-template-columns: 1fr;
+	max-width: 28rem;
+}
+
 .cinematic-face {
 	width: 120px;
 	height: auto;

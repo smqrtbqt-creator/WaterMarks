@@ -249,7 +249,7 @@
 	</section>
 
 	<RoleAlert
-		speaker="Goutte"
+		speaker="Têtard mouillé"
 		role="Héros de la flaque"
 		line={won
 			? 'Les objectifs tiennent. Ce scénario de la Rivière Blanche est le gros morceau, pas un combat de flaque.'
