@@ -28,7 +28,9 @@
 	<p class="lede">
 		Goutte ne gagne un niveau et un objet qu’en résolvant une énigme.
 		Dans l’arène, on tape des monstres d’eau : ça n’offre rien.
-		{#if !canBeat(flaque.save, MONSTERS[1])}
+		{#if flaque.save.solved.length === 0}
+			Sans énigme, la jauge reste sous le trait : marteler ne fait pas partir le coup.
+		{:else if !canBeat(flaque.save, MONSTERS[1])}
 			Sans la clé à molette, le canard de bâche dissout Goutte.
 		{/if}
 		{ENIGMAS.filter((enigma) => flaque.save.solved.includes(enigma.id)).length} / {ENIGMAS.length} énigmes résolues.

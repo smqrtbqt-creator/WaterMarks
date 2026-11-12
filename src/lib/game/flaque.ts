@@ -79,8 +79,35 @@ export const MONSTERS: Monster[] = [
 export const BASE_DAMAGE = 1;
 export const BASE_HP = 14;
 export const HP_PER_LEVEL = 12;
-/** Deux coups par seconde : le bouton de l’arène reprend après 500 ms. */
-export const CLICKS_PER_SEC = 2;
+/** Au-dessus de ce trait, le coup part. */
+export const HIT_LINE = 62;
+/** Deux clics plus serrés que ça comptent pour un seul, pour laisser marteler sans compter deux fois le même appui. */
+export const DEBOUNCE_MS = 80;
+/** Même en martelant au plus vite, chaque coup suivant paie au moins ce temps-là. */
+export const RED_FLOOR_MS = 180;
+
+/** Hauteur ajoutée à la jauge par un clic. */
+export function pumpOf(solved: number): number {
+	return solved <= 0 ? 12 : 14 + solved * 4;
+}
+
+/** Vitesse de retombée de la jauge, par seconde. Moins de modules : elle retombe plus vite. */
+export function drainPerSec(solved: number): number {
+	return solved <= 0 ? 90 : 64 - solved * 8;
+}
+
+/** Sans module, le plafond reste sous le trait : marteler ne suffit pas. */
+export function powerCap(solved: number): number {
+	return solved <= 0 ? 48 : 100;
+}
+
+export function drainGauge(power: number, solved: number, gapMs: number): number {
+	return Math.max(0, power - drainPerSec(solved) * (gapMs / 1000));
+}
+
+export function pumpGauge(power: number, solved: number): number {
+	return Math.min(powerCap(solved), Math.max(0, power) + pumpOf(solved));
+}
 
 export type IntroId = 'pompage' | 'bassin' | 'gibbs';
 
@@ -131,17 +158,39 @@ export function solve(save: Save, id: EnigmaId): { save: Save; fresh: boolean } 
 	return { save: { ...save, solved: [...save.solved, id] }, fresh: true };
 }
 
-export function secondsToWin(save: Save, monster: Monster): number {
-	const dps = damageOf(save) * CLICKS_PER_SEC;
-	if (dps <= 0) return Number.POSITIVE_INFINITY;
-	return monster.hp / dps;
+export type Strike = { landed: boolean; green: number; red: number; power: number };
+
+/**
+ * Un clic de jauge. gapMs = 0 au premier appui : rien n’est encaissé.
+ * Le coup part seulement si la jauge dépasse le trait après ce clic.
+ */
+export function strike(save: Save, monster: Monster, gapMs: number, power: number, live = false): Strike {
+	const solved = save.solved.length;
+	const opening = gapMs === 0;
+	const drained = opening || live ? power : drainGauge(power, solved, gapMs);
+	const next = pumpGauge(drained, solved);
+	const landed = next >= HIT_LINE;
+	const red = opening ? 0 : monster.atk * (Math.max(gapMs, RED_FLOOR_MS) / 1000);
+	return { landed, green: landed ? damageOf(save) : 0, red, power: next };
 }
 
 export function damageTaken(save: Save, monster: Monster): number {
-	return monster.atk * secondsToWin(save, monster);
+	if (powerCap(save.solved.length) < HIT_LINE) return Number.POSITIVE_INFINITY;
+	const green = damageOf(save);
+	if (green <= 0) return Number.POSITIVE_INFINITY;
+	let power = 0;
+	let foe = monster.hp;
+	let red = 0;
+	for (let i = 0; i < 800 && foe > 0; i += 1) {
+		const hit = strike(save, monster, i === 0 ? 0 : DEBOUNCE_MS, power);
+		power = hit.power;
+		red += hit.red;
+		if (hit.green > 0) foe -= hit.green;
+	}
+	return foe <= 0 ? red : Number.POSITIVE_INFINITY;
 }
 
-/** Vrai si, en tapant au rythme prévu, Goutte abat le monstre avant d’être dissoute. */
+/** Vrai si, en cliquant au plus vite, Goutte abat le monstre avant d’être dissoute. */
 export function canBeat(save: Save, monster: Monster): boolean {
 	return damageTaken(save, monster) < hpOf(save);
 }

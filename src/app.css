@@ -1984,9 +1984,18 @@ dialog .primary {
 	margin: 0 0 0.6rem;
 }
 
+.cinematic-card.wide {
+	grid-template-columns: 200px 1fr;
+	max-width: 46rem;
+}
+
 .cinematic-face {
 	width: 120px;
 	height: auto;
+}
+
+.cinematic-card.wide .cinematic-face {
+	width: 200px;
 }
 
 .cinematic-strip,
@@ -2051,12 +2060,100 @@ dialog .primary {
 
 .arena-hero,
 .arena-foe {
+	position: relative;
 	display: grid;
 	justify-items: center;
 	gap: 0.35rem;
 	background: transparent;
 	border: 0;
 	color: inherit;
+}
+
+.arena-mark {
+	position: absolute;
+	width: 22px;
+	height: 9px;
+	border-radius: 40% 60% 50% 50%;
+	pointer-events: none;
+	animation: arena-mark 0.7s ease-out forwards;
+}
+
+.arena-mark.red {
+	background: #e23d3d;
+	box-shadow: 0 0 8px #e23d3d;
+}
+
+.arena-mark.green {
+	background: #7dce4a;
+	box-shadow: 0 0 8px #7dce4a;
+}
+
+.arena-mark.drop {
+	width: 12px;
+	height: 16px;
+	border-radius: 50% 50% 50% 0;
+	background: #8ec8e6;
+	box-shadow: 0 0 8px #8ec8e6;
+	transform: rotate(-40deg);
+}
+
+.hero-blob.bob {
+	animation: arena-bob 0.12s ease-out;
+}
+
+.track {
+	position: relative;
+	height: 1.35rem;
+	margin-top: 0.85rem;
+	border-radius: 999px;
+	border: 1px solid var(--line);
+	background: #07161c;
+	overflow: hidden;
+}
+
+.track-fill {
+	height: 100%;
+	width: 0;
+	background: linear-gradient(90deg, #1d4c5c, #8ec8e6);
+}
+
+.track-fill.hot {
+	background: linear-gradient(90deg, #1d6d8a, #dff56a);
+}
+
+.track-line {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background: #fff;
+}
+
+.track-caption {
+	margin: 0.35rem 0 0.6rem;
+	color: var(--muted);
+	font-size: 0.92rem;
+}
+
+.track-mash {
+	margin-bottom: 0.6rem;
+}
+
+@keyframes arena-bob {
+	50% {
+		transform: scale(1.12, 0.78);
+	}
+}
+
+@keyframes arena-mark {
+	from {
+		opacity: 1;
+		transform: scale(0.6);
+	}
+	to {
+		opacity: 0;
+		transform: translateY(-10px) scale(1.15);
+	}
 }
 
 .arena-blob {

@@ -58,7 +58,7 @@ assert.equal(gibbsReading(ironUi(5, 1, 0.21, 7.4), IRON_K, 15).sense, 'inverse')
 let save = emptySave();
 assert.equal(levelOf(save), 1);
 assert.equal(damageOf(save), 1);
-assert.equal(canBeat(save, MONSTERS[0]), true);
+assert.equal(canBeat(save, MONSTERS[0]), false);
 assert.equal(canBeat(save, MONSTERS[1]), false);
 const once = solve(save, 'bache');
 assert.equal(once.fresh, true);

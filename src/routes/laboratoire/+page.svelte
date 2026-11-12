@@ -3,18 +3,23 @@
 	import Analysis from '$lib/components/simulator/Analysis.svelte';
 	import Diagnosis from '$lib/components/simulator/Diagnosis.svelte';
 	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
+	import Cinematic from '$lib/components/Cinematic.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Outcome from '$lib/components/simulator/Outcome.svelte';
 	import Plant from '$lib/components/simulator/Plant.svelte';
+	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import { makeToast, type Toast } from '$lib/feedback';
+	import { n } from '$lib/sim/format';
 	import { CASES, caseById } from '$lib/simulator/cases';
 	import { MODEL_LIMITS, simulate } from '$lib/simulator/engine';
 	import { defaultSettings } from '$lib/simulator/treatments';
 	import { MODULE_ORDER, type ProblemId } from '$lib/simulator/types';
 	import { judge, synthesis } from '$lib/simulator/validation';
 
-	let studyId = $state(CASES[0].id);
-	let settings = $state(defaultSettings(CASES[0].moleculeId));
+	const sunflower = caseById('nitrates');
+	let studyId = $state(sunflower.id);
+	let settings = $state(defaultSettings(sunflower.moleculeId));
+	let intro = $state(true);
 	let selectedProblems = $state<ProblemId[]>([]);
 	let diagnosisSent = $state(false);
 	let help = $state(0);
@@ -75,6 +80,36 @@
 		tick = 0;
 		announceJudgement();
 	}
+
+	function closeIntro() {
+		intro = false;
+		load('nitrates');
+		settings.enabled = { ...settings.enabled, nitrate: true };
+		settings.nitrateTech = 'biological';
+		settings.nitrateRate = 50;
+		settings.nitrateCapacity = 50;
+		launch();
+	}
+
+	const alertLine = $derived.by(() => {
+		if (study.id !== 'nitrates') {
+			return 'L’épandage, c’est le cas Excès de nitrates. Le tracteur n’a pas roulé sur ce scénario-là.';
+		}
+		const nitrate = simulation.after.nitrateMgL;
+		if (!settings.enabled.nitrate) {
+			return 'Les nitrates du champ sont toujours là. Remets la dénitrification biologique. L’adoucisseur ne les retire pas.';
+		}
+		if (settings.nitrateTech === 'resin') {
+			return 'La résine retire des nitrates. Ce n’est pas la dénitrification : l’azote de mon épandage doit partir en diazote.';
+		}
+		if (!hasRun) {
+			return 'La dénitrification biologique est armée. Lance la simulation. L’azote n’est pas détruit, il change de forme.';
+		}
+		if (nitrate <= 50) {
+			return `Les nitrates sont à ${n(nitrate, 0)} mg/L. L’azote est parti en N₂, il n’est pas détruit. L’indicateur microbien a monté : une désinfection vient ensuite. Ce n’est pas une eau déclarée potable.`;
+		}
+		return `La voie biologique tourne, et les nitrates sont encore à ${n(nitrate, 0)} mg/L, au-dessus de 50. Monte la charge ou la capacité. L’azote n’est pas détruit.`;
+	});
 </script>
 
 <svelte:head>
@@ -98,6 +133,21 @@
 			<button type="button" onclick={() => load(studyId)}>Recommencer le cas</button>
 		</div>
 	</header>
+
+	{#if intro}
+		<Cinematic
+			cast="tournesol"
+			speaker="Professeur Tournesol"
+			role="Scientifique égaré"
+			line="Les lunettes étaient restées sur le tracteur. Ce tracteur presse l’huile de tournesol, il ne lit pas une carte. J’ai épandu sur le champ. Beaucoup trop. Les nitrates sont dans le puits de l’atelier, à 78 mg/L. L’azote n’est pas détruit : la dénitrification le renvoie en diazote. 5 CH₂O + 4 NO₃⁻ donnent 2 N₂, 4 HCO₃⁻, CO₂ et 3 H₂O. 50 mg/L est la limite de l’arrêté du 11 janvier 2007 modifié. Ce n’est pas une eau déclarée potable."
+			action="Je lance la dénitrification"
+			onclose={closeIntro}
+		/>
+	{/if}
+
+	{#if !intro}
+		<RoleAlert speaker="Professeur Tournesol" role="Scientifique égaré" line={alertLine} />
+	{/if}
 
 	<nav class="scenarios" aria-label="Cas pratiques">
 		{#each CASES as item (item.id)}
