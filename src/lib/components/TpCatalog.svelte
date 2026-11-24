@@ -57,7 +57,7 @@
 				<p class="mark">{item.source}</p>
 				<h3>{item.title}</h3>
 				<p class="lab-note">{item.detail}</p>
-				<a class="primary" href={item.href} target="_blank" rel="noopener noreferrer">
+				<a class="primary" href={hrefOf(item.href)} target="_blank" rel="noopener noreferrer">
 					Télécharger
 					<span class="resource-sr">{item.title}</span>
 				</a>
