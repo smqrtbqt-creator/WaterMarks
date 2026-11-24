@@ -1,6 +1,11 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import { docLinks } from '$lib/links';
+
+	function hrefOf(href: string) {
+		return href.startsWith('/') ? `${base}${href}` : href;
+	}
 </script>
 
 <svelte:head>
@@ -35,8 +40,8 @@
 					<p class="mark">{item.source}</p>
 					<h2>{item.title}</h2>
 					<p class="lab-note">{item.detail}</p>
-					<p class="resource-url">{item.href}</p>
-					<a class="primary" href={item.href} target="_blank" rel="noopener noreferrer">
+					<p class="resource-url">{hrefOf(item.href)}</p>
+					<a class="primary" href={hrefOf(item.href)} target="_blank" rel="noopener noreferrer">
 						Consulter
 						<span class="resource-sr">{item.title}</span>
 					</a>
