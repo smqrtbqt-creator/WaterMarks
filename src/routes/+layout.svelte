@@ -11,13 +11,3 @@
 </script>
 
 {@render children()}
-
-<iframe
-	class="sound-instant"
-	title="C’est vrai"
-	width="110"
-	height="200"
-	src="https://www.myinstants.com/instant/cest-vrai-54735/embed/"
-	frameborder="0"
-	scrolling="no"
-></iframe>
