@@ -121,6 +121,22 @@ export const tpDocuments: TpDocument[] = [
 	},
 	{
 		theme: 'Comptabilité',
+		classe: 'Seconde pro Productions CCE',
+		title: 'Analyser les dépenses d’une exploitation',
+		detail:
+			'Seconde pro CCE. Trier et filtrer les factures 2025, repérer des dépenses compressibles et préparer un budget 2026. Fiche PDF. Les données sont fictives.',
+		href: '/documents-tp/TP_exp2de.pdf'
+	},
+	{
+		theme: 'Comptabilité',
+		classe: 'Seconde pro Productions CCE',
+		title: 'Classeur élève — dépenses d’une exploitation',
+		detail:
+			'LibreOffice Calc : feuilles Journal des dépenses et Prévisionnel 2026. Les données sont fictives. La fiche demande ce classeur.',
+		href: '/documents-tp/TP_eleve_exploitation_agricole.xlsx'
+	},
+	{
+		theme: 'Comptabilité',
 		classe: 'Première CGEA',
 		title: 'Analyser les dépenses d’une exploitation agricole',
 		detail:
