@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
@@ -20,6 +21,7 @@
 			<HeroChip />
 		</div>
 	</header>
+	<CourseGate>
 	<RoleAlert
 		speaker="Têtard mouillé"
 		role="Héros de la flaque"
@@ -63,4 +65,5 @@
 			</a>
 		</li>
 	</ul>
+	</CourseGate>
 </div>

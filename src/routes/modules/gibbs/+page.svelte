@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import Cinematic from '$lib/components/Cinematic.svelte';
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Slider from '$lib/components/Slider.svelte';
+	import { courseSnapshot, ensureCourseClock } from '$lib/game/courseClock.svelte';
 	import { ENIGMAS } from '$lib/game/flaque';
 	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
@@ -82,6 +84,8 @@
 		'9': '⁹'
 	};
 
+	ensureCourseClock();
+
 	$effect(() => {
 		if (flaque.loaded && flaque.seen('gibbs')) intro = false;
 	});
@@ -98,7 +102,7 @@
 			return;
 		}
 		if (reading.sense === 'direct') armed = true;
-		if (armed && reading.sense === 'inverse') flaque.solve('bascule');
+		if (courseSnapshot().open && armed && reading.sense === 'inverse') flaque.solve('bascule');
 	});
 
 	function sci(value: number) {
@@ -124,6 +128,7 @@
 			<HeroChip />
 		</div>
 	</header>
+	<CourseGate>
 
 	{#if intro}
 		<Cinematic
@@ -228,4 +233,5 @@
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
 	</div>
+	</CourseGate>
 </div>

@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import Cinematic from '$lib/components/Cinematic.svelte';
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Slider from '$lib/components/Slider.svelte';
+	import { courseSnapshot, ensureCourseClock } from '$lib/game/courseClock.svelte';
 	import { ENIGMAS } from '$lib/game/flaque';
 	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
@@ -18,6 +20,8 @@
 	let running = $state(false);
 	let intro = $state(true);
 	let dipped = $state(true);
+
+	ensureCourseClock();
 
 	const flow = $derived(pumpFlowM3h(speedA) + pumpFlowM3h(speedB));
 	const usefulFlow = $derived(level <= 0 ? 0 : flow);
@@ -42,7 +46,7 @@
 	});
 
 	$effect(() => {
-		if (intro || !running) return;
+		if (intro || !running || !courseSnapshot().open) return;
 		const id = window.setInterval(() => {
 			level = levelAfter(level, usefulFlow, demand, 4 / 60);
 		}, 400);
@@ -50,6 +54,7 @@
 	});
 
 	$effect(() => {
+		if (!courseSnapshot().open) return;
 		if (level < 20) dipped = true;
 		if (dipped && level >= 70 && usefulFlow > demand + 2) flaque.solve('bache');
 		if (staticHead >= 35 && usefulFlow > demand + 2 && level > 15) flaque.solve('hstat');
@@ -75,6 +80,7 @@
 			<HeroChip />
 		</div>
 	</header>
+	<CourseGate>
 
 	{#if intro}
 		<Cinematic
@@ -178,4 +184,5 @@
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
 	</div>
+	</CourseGate>
 </div>

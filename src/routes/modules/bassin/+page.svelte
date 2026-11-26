@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import Cinematic from '$lib/components/Cinematic.svelte';
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
+	import { courseSnapshot, ensureCourseClock } from '$lib/game/courseClock.svelte';
 	import { ENIGMAS } from '$lib/game/flaque';
 	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
@@ -13,6 +15,8 @@
 	let selected = $state<PlaceId>('confluence');
 	let log = $state<{ place: string; weather: string; nitrate: number; turbidity: number }[]>([]);
 	let intro = $state(true);
+
+	ensureCourseClock();
 
 	const place = $derived(PLACES.find((item) => item.id === selected) ?? PLACES[0]);
 	const reading = $derived(sample(place, weather));
@@ -46,7 +50,12 @@
 			{ place: place.name, weather: weatherLabel, nitrate: reading.nitrate, turbidity: reading.turbidity },
 			...log
 		].slice(0, 8);
-		if (weather === 'epandage' && place.id === 'champ' && reading.nitrate > NITRATE_REFERENCE_MG_L) {
+		if (
+			courseSnapshot().open &&
+			weather === 'epandage' &&
+			place.id === 'champ' &&
+			reading.nitrate > NITRATE_REFERENCE_MG_L
+		) {
 			flaque.solve('ruisseau');
 		}
 	}
@@ -65,6 +74,7 @@
 			<HeroChip />
 		</div>
 	</header>
+	<CourseGate>
 
 	{#if intro}
 		<Cinematic
@@ -147,4 +157,5 @@
 			<p><a href="{base}/modules">Retour aux modules</a></p>
 		</div>
 	</div>
+	</CourseGate>
 </div>

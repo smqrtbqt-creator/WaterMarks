@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
@@ -20,6 +21,7 @@
 		strike,
 		type Monster
 	} from '$lib/game/flaque';
+	import { courseSnapshot, ensureCourseClock } from '$lib/game/courseClock.svelte';
 	import { flaque } from '$lib/game/flaque.svelte';
 	import { n } from '$lib/sim/format';
 
@@ -37,6 +39,8 @@
 	let log = $state('Choisis un monstre. Gagner un combat ne donne ni niveau ni objet.');
 	let outcome = $state<'idle' | 'fight' | 'win' | 'lose'>('idle');
 
+	ensureCourseClock();
+	const hours = $derived(courseSnapshot());
 	const monster = $derived(MONSTERS.find((item) => item.id === monsterId) ?? MONSTERS[0]);
 	const solved = $derived(flaque.save.solved.length);
 	const alertLine = $derived(
@@ -56,7 +60,11 @@
 	);
 
 	$effect(() => {
-		if (!fighting) return;
+		if (!hours.open) fighting = false;
+	});
+
+	$effect(() => {
+		if (!fighting || !hours.open) return;
 		const rate = drainPerSec(flaque.save.solved.length);
 		let prev = performance.now();
 		let frame = 0;
@@ -109,6 +117,11 @@
 
 	function begin(next: Monster) {
 		monsterId = next.id;
+		if (!hours.open) {
+			fighting = false;
+			outcome = 'idle';
+			return;
+		}
 		if (!canFace(flaque.save, next)) {
 			fighting = false;
 			outcome = 'idle';
@@ -128,7 +141,7 @@
 	}
 
 	function hit() {
-		if (!fighting || foeHp <= 0 || heroHp <= 0) return;
+		if (!hours.open || !fighting || foeHp <= 0 || heroHp <= 0) return;
 		const now = performance.now();
 		const gap = lastClick === 0 ? 0 : now - lastClick;
 		if (gap !== 0 && gap < DEBOUNCE_MS) return;
@@ -172,6 +185,7 @@
 		</div>
 	</header>
 
+	<CourseGate>
 	<RoleAlert speaker="Sifflard" role="Arbitre de la flaque" line={alertLine} />
 
 	<div class="module-layout">
@@ -254,7 +268,7 @@
 		</div>
 	</div>
 
-	{#if outcome === 'win' || outcome === 'lose'}
+	{#if hours.open && (outcome === 'win' || outcome === 'lose')}
 		<div class="cinematic" role="dialog" aria-modal="true" aria-labelledby="fight-result">
 			<div class="cinematic-card result-card">
 				<p class="mark">Arène</p>
@@ -268,4 +282,5 @@
 			</div>
 		</div>
 	{/if}
+	</CourseGate>
 </div>

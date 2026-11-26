@@ -2258,3 +2258,24 @@ dialog .primary {
 		grid-template-columns: 1fr;
 	}
 }
+
+.course-timer {
+	margin: 0.8rem 0;
+	padding: 1.1rem 1.3rem 1.2rem;
+	border-left: 6px solid var(--accent);
+	font-variant-numeric: tabular-nums;
+}
+
+.course-clock {
+	display: block;
+	margin: 0.35rem 0 0.55rem;
+	font-family: 'IBM Plex Mono', ui-monospace, monospace;
+	font-size: clamp(3.4rem, 10vw, 6.5rem);
+	font-weight: 500;
+	line-height: 0.95;
+	letter-spacing: 0.04em;
+}
+
+.course-timer.closed {
+	border-left-color: var(--warn);
+}
