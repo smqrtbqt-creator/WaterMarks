@@ -16,6 +16,7 @@ export type TpDocument = {
 };
 
 export const themeOrder = [
+	'Présentation',
 	'pH',
 	'Chimie de l’eau',
 	'Pollution et transfert',
@@ -25,7 +26,6 @@ export const themeOrder = [
 	'table pivot / table dynamique',
 	'Comptabilité',
 	'Tableur',
-	'Présentation',
 	'CV',
 	'Fiabilité de l’information'
 ];
