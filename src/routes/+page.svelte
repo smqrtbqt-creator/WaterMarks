@@ -1,7 +1,9 @@
 <script lang="ts">
+	import CourseGate from '$lib/components/CourseGate.svelte';
 	import FeedbackToast from '$lib/components/FeedbackToast.svelte';
 	import HeroChip from '$lib/components/HeroChip.svelte';
 	import RoleAlert from '$lib/components/RoleAlert.svelte';
+	import { courseSnapshot, ensureCourseClock } from '$lib/game/courseClock.svelte';
 	import { flaque } from '$lib/game/flaque.svelte';
 	import ProjectSwitch from '$lib/components/ProjectSwitch.svelte';
 	import Inspector from '$lib/components/Inspector.svelte';
@@ -33,6 +35,8 @@
 	/** Suivi non réactif pour éviter les boucles d’effet */
 	let prevGoalOk: Record<string, boolean> = {};
 	let prevCritical = 0;
+
+	ensureCourseClock();
 
 	const scenario = $derived(scenarioById(scenarioId));
 	const evaluation = $derived(evaluate(plant, scenario, settings, acc, modifiers));
@@ -157,13 +161,13 @@
 	});
 
 	$effect(() => {
-		if (!running) return;
+		if (!running || !courseSnapshot().open) return;
 		const id = window.setInterval(tick, 200);
 		return () => window.clearInterval(id);
 	});
 
 	$effect(() => {
-		if (won) flaque.solve('riviere');
+		if (courseSnapshot().open && won) flaque.solve('riviere');
 	});
 </script>
 
@@ -185,6 +189,9 @@
 			<ProjectSwitch current="home" />
 			<HeroChip />
 		</div>
+	</header>
+
+	<CourseGate>
 		<nav class="scenarios" aria-label="Scénarios">
 			{#each scenarios as item (item.id)}
 				<button
@@ -219,7 +226,6 @@
 				{/each}
 			</div>
 		</div>
-	</header>
 
 	<section class="brief">
 		<div>
@@ -318,6 +324,7 @@
 	</footer>
 
 	<FeedbackToast bind:toasts />
+	</CourseGate>
 </div>
 
 <dialog bind:this={hypothesesDialog}>
