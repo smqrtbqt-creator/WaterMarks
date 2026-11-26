@@ -1,8 +1,9 @@
 /**
  * Documents proposés aux élèves depuis la page Liens.
- * Pour en ajouter un, copier un bloc et remplir le titre, la source, le détail et l’adresse.
+ * Pour en ajouter un, copier un bloc et remplir le thème, le titre, la source, le détail et l’adresse.
  */
 export type DocLink = {
+	theme: string;
 	title: string;
 	source: string;
 	detail: string;
@@ -11,6 +12,7 @@ export type DocLink = {
 
 export const docLinks: DocLink[] = [
 	{
+		theme: 'pH',
 		title: 'Relevés de pH sur la Gartempe',
 		source: 'Hub’Eau · qualité des rivières',
 		detail:
@@ -18,6 +20,7 @@ export const docLinks: DocLink[] = [
 		href: 'https://hubeau.eaufrance.fr/api/v2/qualite_rivieres/analyse_pc.csv?libelle_cours_eau=Gartempe&libelle_parametre=pH&size=1000&fields=date_prelevement,resultat,libelle_parametre,libelle_station'
 	},
 	{
+		theme: 'rechercheV',
 		title: 'RECHERCHEV — formules complètes',
 		source: 'rechercheV',
 		detail:
@@ -25,6 +28,7 @@ export const docLinks: DocLink[] = [
 		href: '/documents-tp/cours_recherchev_formules_completes.pdf'
 	},
 	{
+		theme: 'rechercheV',
 		title: 'Tronçons AEP, Creuse (23)',
 		source: 'rechercheV',
 		detail:
@@ -32,8 +36,9 @@ export const docLinks: DocLink[] = [
 		href: '/documents-tp/reseau_canalisation_aep_creuse_23.xlsx'
 	},
 	{
+		theme: 'table pivot / table dynamique',
 		title: 'TP — tables dynamiques, réseau AEP',
-		source: 'rechercheV',
+		source: 'table pivot / table dynamique',
 		detail:
 			'BTSA GEMEAU, 1 h 30 : tableaux croisés dynamiques sur le classeur de 250 tronçons. Jeu pédagogique, pas l’inventaire réel des canalisations de la Creuse.',
 		href: '/documents-tp/TP_TCD_Reseau_AEP_BTSA_GEMEAU.pdf'
