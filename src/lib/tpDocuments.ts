@@ -25,6 +25,7 @@ export const themeOrder = [
 	'table pivot / table dynamique',
 	'Comptabilité',
 	'Tableur',
+	'Présentation',
 	'CV',
 	'Fiabilité de l’information'
 ];
@@ -49,6 +50,14 @@ export const tpDocuments: TpDocument[] = [
 		title: 'Fiche PDF — fiabilité des informations, premiers secours',
 		detail: 'Sujet d’origine du TP, à lire à côté de la page interactive.',
 		href: '/documents-tp/TP_fiabilite_premiers_secours.pdf'
+	},
+	{
+		theme: 'Présentation',
+		classe: 'Seconde SAPAT',
+		title: 'Bien vieillir — présentation Impress',
+		detail:
+			'LibreOffice Impress : présentation bilingue de six diapositives sur la vie sociale et l’activité physique des personnes âgées. Les informations viennent du portail officiel pour-les-personnes-agees.gouv.fr. Fiche PDF.',
+		href: '/documents-tp/tp_sapat_bien_vieillir_impress.pdf'
 	},
 	{
 		theme: 'Tableur',
