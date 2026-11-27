@@ -60,6 +60,14 @@ export const tpDocuments: TpDocument[] = [
 		href: '/documents-tp/tp_sapat_bien_vieillir_impress.pdf'
 	},
 	{
+		theme: 'Présentation',
+		classe: 'Seconde Aquaculture',
+		title: 'Présenter une espèce aquacole — Impress',
+		detail:
+			'LibreOffice Impress : recherche documentaire puis diaporama de 8 à 10 diapositives sur une espèce aquacole, avec une diapositive de sources. Fiche PDF.',
+		href: '/documents-tp/tp_2de_aqua_espece_impress.pdf'
+	},
+	{
 		theme: 'Tableur',
 		classe: 'Seconde SAPAT',
 		title: 'Suivre la participation aux animations',
