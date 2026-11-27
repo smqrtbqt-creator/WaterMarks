@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { siteRoot } from '../base'
 import { STATIONS } from '../data/stations'
 import { useLab } from '../store/LabContext'
 import { useCo2 } from '../store/Co2Context'
@@ -8,6 +9,7 @@ export function Layout() {
   const { context } = useLab()
   const co2 = useCo2()
   const location = useLocation()
+  const root = siteRoot()
   const onCo2 = location.pathname.includes('/co2')
   const onEquilibrium = location.pathname.includes('/equilibre')
   const done = onCo2 ? co2.context.completed.length : context.completed.length
@@ -20,9 +22,9 @@ export function Layout() {
           <p className="mark">BTSA GEMEAU · laboratoire</p>
           <h1>{onEquilibrium ? 'Filière forage' : onCo2 ? 'Dosage CO₂' : 'Alcalinité · TA / TAC'}</h1>
           <p className="plant-switch">
-            <a href="/">Rivière Blanche</a>
-            <a href="/laboratoire">Laboratoire</a>
-            <a href="/redox/">Redox</a>
+            <a href={`${root}/`}>Rivière Blanche</a>
+            <a href={`${root}/laboratoire`}>Laboratoire</a>
+            <a href={`${root}/redox/`}>Redox</a>
             <NavLink to="/" end className={({ isActive }) => (isActive && !onCo2 ? 'active' : undefined)}>
               TA / TAC
             </NavLink>
@@ -32,8 +34,8 @@ export function Layout() {
             <NavLink to="/equilibre" className={({ isActive }) => (isActive ? 'active' : undefined)}>
               Filière forage
             </NavLink>
-            <a href="/liens">Liens</a>
-            <a href="/documents-tp">Documents de TP</a>
+            <a href={`${root}/liens`}>Liens</a>
+            <a href={`${root}/documents-tp`}>Documents de TP</a>
           </p>
         </div>
         {onEquilibrium ? (

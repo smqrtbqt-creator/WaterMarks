@@ -2,6 +2,19 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function () {
+        var marker = '/redox'
+        var path = location.pathname
+        var at = path.indexOf(marker)
+        var root = marker + '/'
+        if (at !== -1) {
+          var next = path.charAt(at + marker.length)
+          if (!next || next === '/') root = path.slice(0, at + marker.length) + '/'
+        }
+        document.write('<base href="' + root + '">')
+      })()
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#071015" />

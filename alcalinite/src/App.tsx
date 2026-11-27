@@ -1,6 +1,6 @@
 import { MotionConfig } from 'framer-motion'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { BASENAME } from './base'
+import { publicBasename } from './base'
 import { Layout } from './components/Layout'
 import { Co2Page } from './pages/Co2Page'
 import { EquilibriumPage } from './pages/EquilibriumPage'
@@ -13,7 +13,7 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <LabProvider>
         <Co2Provider>
-          <BrowserRouter basename={BASENAME}>
+          <BrowserRouter basename={publicBasename()}>
             <Routes>
               <Route element={<Layout />}>
                 <Route index element={<PlantPage />} />

@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
-import { BASENAME } from './src/base.ts'
+const BASENAME = '/alcalinite'
 
 function redirectRoot(): Plugin {
   return {
@@ -21,7 +21,7 @@ function redirectRoot(): Plugin {
 }
 
 export default defineConfig({
-  base: `${BASENAME}/`,
+  base: './',
   build: {
     outDir: '../static/alcalinite',
     emptyOutDir: true,
